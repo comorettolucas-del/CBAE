@@ -261,6 +261,82 @@
   }
   .solid-btn:hover{ background:var(--red-dark); }
 
+  /* ---------- MODE TOGGLE ---------- */
+  .mode-toggle{
+    display:inline-flex; border:2px solid var(--ink); margin-bottom:22px;
+  }
+  .mode-btn{
+    background:var(--card); color:var(--ink-soft); border:none;
+    font-family:'Big Shoulders Display',sans-serif; font-weight:700;
+    font-size:0.85rem; letter-spacing:0.03em; padding:9px 20px;
+  }
+  .mode-btn + .mode-btn{ border-left:2px solid var(--ink); }
+  .mode-btn.active{ background:var(--ink); color:var(--paper); }
+
+  /* ---------- QUIZ VIEW ---------- */
+  .quiz-card{
+    background:var(--card); border:2px solid var(--line); box-shadow:var(--shadow);
+    max-width:640px; margin:0 auto 20px; padding:26px 24px;
+  }
+  .quiz-tag{
+    display:inline-block; font-family:'Big Shoulders Display',sans-serif;
+    font-weight:700; font-size:0.72rem; letter-spacing:0.08em;
+    padding:3px 10px; margin-bottom:14px; background:var(--paper-2); color:var(--ink-soft);
+  }
+  .quiz-q{
+    font-size:clamp(1.05rem,2.6vw,1.28rem); line-height:1.4; font-weight:600; margin:0 0 20px;
+  }
+  .quiz-options{ display:flex; flex-direction:column; gap:10px; }
+  .quiz-opt{
+    display:flex; align-items:flex-start; gap:12px; text-align:left;
+    background:var(--paper); border:2px solid var(--line); padding:12px 14px;
+    font-size:0.95rem; line-height:1.4; color:var(--ink);
+  }
+  .quiz-opt:hover:not(:disabled){ border-color:var(--ink-soft); }
+  .quiz-opt .letter{
+    font-family:'Big Shoulders Display',sans-serif; font-weight:800; font-size:0.95rem;
+    background:var(--card); border:2px solid var(--line); width:26px; height:26px;
+    min-width:26px; display:flex; align-items:center; justify-content:center;
+  }
+  .quiz-opt.correct{ background:rgba(47,122,69,0.12); border-color:var(--green); }
+  .quiz-opt.correct .letter{ background:var(--green); border-color:var(--green); color:#fff; }
+  .quiz-opt.incorrect{ background:rgba(180,35,31,0.10); border-color:var(--red); }
+  .quiz-opt.incorrect .letter{ background:var(--red); border-color:var(--red); color:#fff; }
+  .quiz-opt:disabled{ cursor:default; }
+  .quiz-explain{
+    margin-top:16px; padding:12px 14px; background:var(--paper-2);
+    border-left:3px solid var(--red); font-size:0.85rem; color:var(--ink-soft); line-height:1.45;
+  }
+  .quiz-explain[hidden]{ display:none; }
+  .quiz-explain strong{ color:var(--ink); }
+  .quiz-next-row{ max-width:640px; margin:0 auto; text-align:right; }
+  .quiz-next-row[hidden]{ display:none; }
+
+  /* ---------- QUIZ RESULT ---------- */
+  .result-box{
+    text-align:center; max-width:560px; margin:20px auto 0;
+    background:var(--card); border:2px solid var(--line); box-shadow:var(--shadow);
+    padding:34px 26px;
+  }
+  .result-score{
+    font-family:'Big Shoulders Display',sans-serif; font-weight:800;
+    font-size:3rem; line-height:1; margin:6px 0 4px;
+  }
+  .result-pct{ font-size:0.95rem; color:var(--ink-soft); margin:0 0 6px; }
+  .result-msg{ font-size:0.95rem; font-weight:700; margin:10px 0 22px; }
+  .result-msg.good{ color:var(--green); }
+  .result-msg.mid{ color:var(--yellow); }
+  .result-msg.low{ color:var(--red); }
+  .review-list{
+    text-align:left; max-width:560px; margin:0 auto 22px; display:flex; flex-direction:column; gap:10px;
+  }
+  .review-item{
+    background:var(--paper); border:1px solid var(--line); padding:10px 14px; font-size:0.85rem;
+  }
+  .review-item .rq{ font-weight:700; margin-bottom:4px; }
+  .review-item .ra{ color:var(--green); }
+  .review-item .rw{ color:var(--red); text-decoration:line-through; margin-right:6px; }
+
   [hidden]{ display:none !important; }
 </style>
 </head>
@@ -284,7 +360,12 @@
     <div class="hero">
       <span class="tag">Revisão em 1 dia</span>
       <h1 class="display">CARTÕES DE ESTUDO</h1>
-      <p>Escolha um módulo e treine por recordação ativa. Marque cada cartão como <strong>lembrei</strong> ou <strong>não lembrei</strong> — os que você errar voltam a aparecer na mesma sessão.</p>
+      <p id="heroDesc">Escolha um módulo e treine por recordação ativa. Marque cada cartão como <strong>lembrei</strong> ou <strong>não lembrei</strong> — os que você errar voltam a aparecer na mesma sessão.</p>
+    </div>
+
+    <div class="mode-toggle" id="modeToggle">
+      <button class="mode-btn active" data-mode="cards">CARTÕES</button>
+      <button class="mode-btn" data-mode="quiz">SIMULADO</button>
     </div>
 
     <p class="section-label">MÓDULOS</p>
@@ -293,9 +374,9 @@
     <div class="mod-card general" id="generalCard">
       <div class="inner">
         <div>
-          <div class="mod-num">REVISÃO</div>
-          <p class="mod-name display">TODOS OS MÓDULOS</p>
-          <p class="mod-desc" style="min-height:0;">Mistura cartões das 9 partes para uma revisão final geral.</p>
+          <div class="mod-num" id="generalNum">REVISÃO</div>
+          <p class="mod-name display" id="generalName">TODOS OS MÓDULOS</p>
+          <p class="mod-desc" style="min-height:0;" id="generalDesc">Mistura cartões das 9 partes para uma revisão final geral.</p>
         </div>
         <div class="mod-badge" id="generalBadge">— cartões</div>
       </div>
@@ -344,6 +425,37 @@
       <div class="done-actions">
         <button class="solid-btn" id="studyAgainBtn">Estudar de novo</button>
         <button class="ghost-btn" id="backHomeBtn">Voltar aos módulos</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ VIEW (SIMULADO) -->
+  <section id="quizView" hidden>
+    <div class="progress-track"><div class="progress-fill" id="quizProgressFill" style="width:0%"></div></div>
+
+    <div class="quiz-card">
+      <span class="quiz-tag" id="quizTag">QUESTÃO</span>
+      <p class="quiz-q" id="quizQ"></p>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-explain" id="quizExplain" hidden></div>
+    </div>
+
+    <div class="quiz-next-row" hidden id="quizNextRow">
+      <button class="solid-btn" id="quizNextBtn">Próxima →</button>
+    </div>
+  </section>
+
+  <!-- QUIZ RESULT VIEW -->
+  <section id="quizDoneView" hidden>
+    <div class="result-box">
+      <p class="section-label" style="text-align:center;">RESULTADO DO SIMULADO</p>
+      <p class="result-score" id="resultScore">0/0</p>
+      <p class="result-pct" id="resultPct">0% de acerto</p>
+      <p class="result-msg" id="resultMsg"></p>
+      <div class="review-list" id="reviewList"></div>
+      <div class="done-actions">
+        <button class="solid-btn" id="quizAgainBtn">Refazer simulado</button>
+        <button class="ghost-btn" id="quizBackHomeBtn">Voltar aos módulos</button>
       </div>
     </div>
   </section>
@@ -521,7 +633,121 @@
     ]}
   ];
 
+  // Cada questão: q (enunciado), opts (4 alternativas), correct (índice 0-3), explain (justificativa breve)
+  var SIMULADOS = [
+    { id:"apresentacao", num:"00", name:"Apresentação", questions:[
+      {q:"Em que ano foi sancionada a lei estadual que criou a Seção de Bombeiros em Santa Catarina?", opts:["1919","1926","1932","1945"], correct:0, explain:"Lei Estadual nº 1.288, sancionada em 16/09/1919 pelo governador Hercílio Luz."},
+      {q:"Quando a Seção de Bombeiros da Força Pública, hoje CBMSC, foi inaugurada?", opts:["02/10/1926","26/09/1926","16/09/1919","01/01/1920"], correct:1, explain:"A inauguração ocorreu em 26 de setembro de 1926."},
+      {q:"O que significa a sigla CBAE?", opts:["Curso Brasileiro de Auxílio a Emergências","Curso Básico de Atendimento a Emergências","Central Bombeiros de Apoio Emergencial","Comissão Brasileira de Atendimento Emergencial"], correct:1, explain:"CBAE = Curso Básico de Atendimento a Emergências."},
+      {q:"Ao concluir o CBAE, o participante se torna:", opts:["Bombeiro Militar efetivo","Brigadista profissional certificado pelo Corpo de Bombeiros","Agente Comunitário de Proteção Civil e Brigadista Orgânico","Socorrista credenciado pelo SAMU"], correct:2, explain:"O curso forma Agentes Comunitários de Proteção Civil e Brigadistas Orgânicos."},
+      {q:"Quantas praças formavam a Seção de Bombeiros em sua fundação?", opts:["15","27","32","50"], correct:1, explain:"27 praças — 3 sargentos, 3 cabos e 21 soldados."}
+    ]},
+    { id:"licao1", num:"01", name:"Lição I", questions:[
+      {q:"Qual é a fórmula didática de risco apresentada no manual?", opts:["R = A + V - CR","R = V × A / CR","R = CR / (V × A)","R = V - A + CR"], correct:1, explain:"Risco = Vulnerabilidade × Ameaça, dividido pela Capacidade de Resposta."},
+      {q:"O que caracteriza a Situação de Emergência, em contraste com o Estado de Calamidade Pública?", opts:["Capacidade de resposta comprometida substancialmente","Capacidade de resposta comprometida parcialmente","Ausência total de resposta do poder público","Não há diferença entre os dois termos"], correct:1, explain:"Situação de Emergência = comprometimento parcial; Calamidade Pública = comprometimento substancial."},
+      {q:"Qual a ordem correta do Ciclo das Ações de Defesa Civil?", opts:["Resposta, Prevenção, Mitigação, Preparação, Recuperação","Prevenção, Mitigação, Preparação, Resposta, Recuperação","Mitigação, Prevenção, Resposta, Recuperação, Preparação","Preparação, Prevenção, Mitigação, Recuperação, Resposta"], correct:1, explain:"Prevenção → Mitigação → Preparação → Resposta → Recuperação."},
+      {q:"Um vendaval é caracterizado por ventos de:", opts:["40 a 60 km/h","60 a 88 km/h","88 a 102 km/h","102 a 150 km/h"], correct:2, explain:"Vendavais têm ventos entre 88 e 102 km/h."},
+      {q:"Qual a diferença entre inundação e enxurrada?", opts:["Não há diferença, são sinônimos","Inundação é rápida e violenta; enxurrada é gradual","Inundação é um transbordamento gradual; enxurrada é um escoamento rápido e violento","Enxurrada só ocorre em áreas urbanas"], correct:2, explain:"Inundação: transbordamento gradual. Enxurrada: escoamento rápido e violento, ligado a relevo acidentado."},
+      {q:"O que caracteriza um alagamento?", opts:["Transbordamento de rios após chuva prolongada","Acúmulo de água por falha na drenagem urbana","Deslizamento de encostas após chuva intensa","Formação de granizo em áreas urbanas"], correct:1, explain:"Alagamento é o acúmulo de água por falha no escoamento da drenagem urbana."},
+      {q:"Como tratar a água para consumo após um desastre hidrológico, segundo o manual?", opts:["Apenas filtrar com pano limpo","Ferver e acrescentar 2 gotas de água sanitária (ou 1 de hipoclorito) por litro, repousando 15-30 min","Adicionar sal grosso e deixar decantar por 24h","Não é necessário nenhum tratamento se a água estiver clara"], correct:1, explain:"Ferver e depois adicionar água sanitária/hipoclorito, deixando repousar 15 a 30 minutos."},
+      {q:"Durante uma tempestade de raios, qual cuidado deve ser tomado?", opts:["Usar celular normalmente, sem restrições","Não usar telefone ligado à rede elétrica nem celular carregando na tomada","Procurar abrigo embaixo de árvores isoladas","Ficar em áreas abertas, longe de construções"], correct:1, explain:"Evite telefone com fio ligado à rede elétrica e celular carregando na tomada."},
+      {q:"Quais sinais indicam risco de movimento de massa (deslizamento)?", opts:["Céu nublado e vento forte","Fendas/rachaduras no solo, inclinação de árvores e postes, surgimento de minas d'água","Queda de temperatura repentina","Aumento do nível dos rios apenas"], correct:1, explain:"Fendas, rachaduras, árvores/postes inclinados e minas d'água são sinais de alerta."},
+      {q:"Ao identificar um foco de incêndio florestal, a orientação correta é:", opts:["Tentar apagar sozinho com galhos","Ignorar se for pequeno","Nunca combater sozinho — avisar Bombeiros, Defesa Civil ou PM","Esperar a chuva apagar naturalmente"], correct:2, explain:"Nunca combater sozinho um incêndio florestal — sempre acionar as autoridades competentes."},
+      {q:"O que significa a sigla COBRADE?", opts:["Comitê Brasileiro de Desastres","Classificação Brasileira de Desastres","Conselho Brasileiro de Defesa Civil","Coordenação Brasileira de Emergências"], correct:1, explain:"COBRADE = Classificação Brasileira de Desastres."},
+      {q:"Vulnerabilidade, segundo o glossário do manual, é:", opts:["A probabilidade estatística de um evento ocorrer","A condição do sistema receptor que define a intensidade dos danos causados por um evento","A capacidade de resposta de um órgão público","Um sinônimo de ameaça"], correct:1, explain:"Vulnerabilidade é a condição do corpo/sistema receptor que define a intensidade dos danos."}
+    ]},
+    { id:"licao2", num:"02", name:"Lição II", questions:[
+      {q:"Segundo a Portaria 354/2014 do Ministério da Saúde, emergência é:", opts:["Ocorrência imprevista sem risco à vida","Agravo à saúde com sofrimento intenso ou risco iminente de morte, exigindo tratamento médico imediato","Qualquer chamada ao SAMU","Sinônimo de acidente doméstico"], correct:1, explain:"Emergência exige tratamento médico imediato, por sofrimento intenso ou risco iminente de morte."},
+      {q:"Qual o telefone do SAMU?", opts:["190","191","192","193"], correct:2, explain:"192 é o telefone do SAMU."},
+      {q:"Qual o telefone da Defesa Civil?", opts:["190","193","198","199"], correct:3, explain:"199 é o telefone da Defesa Civil."},
+      {q:"Qual o telefone da Polícia Rodoviária Federal?", opts:["190","191","192","198"], correct:1, explain:"191 é o telefone da PRF."},
+      {q:"Ao acionar um serviço de emergência, quais informações básicas devem ser repassadas?", opts:["Apenas o tipo de emergência","Nome de quem liga, local exato, tipo de emergência e número de vítimas","Somente o endereço completo","Apenas o número de telefone de contato"], correct:1, explain:"É preciso informar nome, local exato, tipo de emergência e quantidade de vítimas."},
+      {q:"Em que cidade e ano surgiu a unidade de Bombeiros Voluntários mais antiga de SC?", opts:["Florianópolis, 1919","Joinville, 1892","Blumenau, 1900","Orleans, 1926"], correct:1, explain:"A unidade mais antiga surgiu em Joinville, em 1892."},
+      {q:"A cada quantos anos o CBMSC recomenda revisar as instalações elétricas residenciais?", opts:["5 anos","10 anos","15 anos","20 anos"], correct:2, explain:"A IN-19 do CBMSC recomenda revisão a cada 15 anos."},
+      {q:"Qual faixa etária apresenta maior risco de morte por afogamento, segundo o manual?", opts:["Crianças até 5 anos","Adolescentes","Adultos de 40 a 60 anos","Idosos acima de 70 anos"], correct:1, explain:"Adolescentes são o grupo de maior risco de morte por afogamento."},
+      {q:"O que a bandeira vermelha significa na sinalização de praias do CBMSC?", opts:["Baixo risco de afogamento","Água imprópria para banho","Alto risco de afogamento","Presença de animais marinhos perigosos"], correct:2, explain:"Bandeira vermelha indica alto risco de afogamento."},
+      {q:"Ao avistar alguém se afogando, qual a orientação principal do manual?", opts:["Entrar na água imediatamente para resgatar","Não entrar na água sem necessidade — ligar 193 e lançar objeto flutuante","Aguardar a chegada do socorro sem fazer nada","Pedir para a vítima nadar até a margem sozinha"], correct:1, explain:"Não entre na água sem necessidade; ligue 193 e lance um objeto flutuante."},
+      {q:"Segundo o manual, é permitida a venda de fogos de artifício para menores de idade?", opts:["Sim, com autorização dos pais","Sim, sem restrições","Não, é proibida por lei","Depende do município"], correct:2, explain:"A venda de fogos de artifício a menores é proibida por lei."},
+      {q:"Como o manual define acidente?", opts:["Evento planejado que causa dano","Evento inesperado que gera consequência específica indesejada, causando dano pessoal, material, financeiro ou ambiental","Sinônimo de emergência médica","Apenas ocorrências de trânsito"], correct:1, explain:"Acidente é um evento inesperado com consequência específica indesejada."}
+    ]},
+    { id:"licao3", num:"03", name:"Lição III", questions:[
+      {q:"O que significa a sigla SHP?", opts:["Sistema Hidráulico Preventivo","Sistema de Hidrantes Públicos","Serviço Hidráulico de Prevenção","Sistema Hídrico de Proteção"], correct:0, explain:"SHP = Sistema Hidráulico Preventivo."},
+      {q:"A cada quantos anos o extintor deve passar por teste hidrostático?", opts:["2 anos","5 anos","10 anos","15 anos"], correct:1, explain:"O teste hidrostático do extintor é obrigatório a cada 5 anos."},
+      {q:"Ao abandonar um prédio em chamas, por qual lado da escada se deve descer?", opts:["Lado esquerdo","Lado direito","Pelo centro","Não há orientação padrão"], correct:1, explain:"A orientação padrão é descer sempre pelo lado direito."},
+      {q:"Com quanto tempo de antecedência um exercício simulado deve ser avisado ao CBMSC?", opts:["24 horas","48 horas","72 horas","1 semana"], correct:2, explain:"O aviso deve ser feito com no mínimo 72 horas de antecedência."},
+      {q:"Quais são os 4 elementos do tetraedro do fogo?", opts:["Calor, oxigênio, fumaça, chama","Calor, combustível, comburente, reação em cadeia","Combustível, faísca, ar, temperatura","Chama, fumaça, calor, gás"], correct:1, explain:"Tetraedro do fogo: calor, combustível, comburente e reação em cadeia."},
+      {q:"Quais são as 3 formas de propagação do calor?", opts:["Condução, convecção, irradiação","Fricção, combustão, expansão","Radiação, evaporação, compressão","Convecção, evaporação, condensação"], correct:0, explain:"Condução, convecção e irradiação são as 3 formas de propagação do calor."},
+      {q:"Incêndio Classe C envolve equipamentos energizados. Qual seu método de extinção?", opts:["Resfriamento com água","Abafamento (nunca água)","Retirada do material","Quebra mecânica da chama"], correct:1, explain:"Classe C: abafamento, nunca com água, pelo risco de choque elétrico."},
+      {q:"Incêndio Classe A (sólidos comuns) é extinto principalmente por:", opts:["Abafamento","Retirada do material","Resfriamento","Quebra da reação em cadeia apenas"], correct:2, explain:"Classe A: extinção por resfriamento, geralmente com água."},
+      {q:"Incêndio Classe D envolve:", opts:["Líquidos inflamáveis","Metais pirofóricos, como magnésio e lítio","Equipamentos elétricos","Papel e madeira"], correct:1, explain:"Classe D: metais pirofóricos, extintos por retirada do material."},
+      {q:"Quais agentes extintores atendem simultaneamente as Classes B e C?", opts:["Água e espuma","Pó químico seco e CO2","Apenas água","Apenas espuma"], correct:1, explain:"Pó químico seco e CO2 atendem tanto Classe B quanto C."},
+      {q:"Ao usar um extintor, para onde o jato deve ser direcionado?", opts:["Para o topo das chamas","Para a base do fogo","Para a fumaça","Para qualquer direção próxima ao fogo"], correct:1, explain:"O jato deve sempre ser dirigido para a base do fogo."},
+      {q:"Antes de usar o SHP (Sistema Hidráulico Preventivo), quais os dois primeiros cuidados?", opts:["Abrir todas as portas e janelas","Acionar o 193 e desligar a energia elétrica do local","Chamar todos os moradores para ajudar","Verificar a pressão da água antes de tudo"], correct:1, explain:"Primeiro aciona-se o 193 e desliga-se a energia elétrica."},
+      {q:"Qual é a maior causa de morte em incêndios?", opts:["Queimaduras diretas pelas chamas","Desabamento de estruturas","A fumaça, por inalação de gases tóxicos e falta de oxigênio","Pânico e tumulto"], correct:2, explain:"A fumaça (gases tóxicos) é a maior causa de morte em incêndios, não as chamas."},
+      {q:"Qual é o primeiro elo da sequência de 10 procedimentos de uma brigada de incêndio?", opts:["Combate ao incêndio","Alerta","Evacuação","Isolamento de área"], correct:1, explain:"O primeiro procedimento da brigada é o Alerta."}
+    ]},
+    { id:"licao4a", num:"04", name:"Lição IV · Parte 1", questions:[
+      {q:"Qual a frequência respiratória normal em adultos?", opts:["8-12 mrm","12-20 mrm","20-40 mrm","40-60 mrm"], correct:1, explain:"Adultos: 12 a 20 movimentos respiratórios por minuto."},
+      {q:"Qual a frequência de pulso normal em lactentes?", opts:["60-100 bpm","80-140 bpm","85-190 bpm","100-150 bpm"], correct:2, explain:"Lactentes: 85 a 190 batimentos por minuto."},
+      {q:"Qual a temperatura corporal considerada normal?", opts:["35,0-35,5°C","36,5-37,0°C","37,5-38,0°C","38,0-38,5°C"], correct:1, explain:"Temperatura normal: entre 36,5°C e 37,0°C."},
+      {q:"Pupilas dilatadas (midríase) podem indicar:", opts:["Apenas sono profundo","Choque, hemorragia, parada cardíaca, TCE ou pouca luminosidade","Sempre uso de drogas","Nenhuma condição relevante"], correct:1, explain:"Midríase pode indicar choque, hemorragia, parada cardíaca, TCE ou pouca luz."},
+      {q:"O que geralmente indica pele pálida na vítima?", opts:["Insolação","Circulação insuficiente, comum em choque hipovolêmico ou IAM","Intoxicação por monóxido de carbono","Febre alta"], correct:1, explain:"Pele pálida indica circulação insuficiente (choque ou infarto)."},
+      {q:"Até que idade uma vítima é classificada como lactente, para fins de primeiros socorros?", opts:["6 meses","1 ano","2 anos","3 anos"], correct:1, explain:"Lactente: até 1 ano de idade."},
+      {q:"Quais são as duas etapas da avaliação geral de uma ocorrência?", opts:["Avaliação da cena e avaliação geral da vítima","Avaliação médica e avaliação policial","Avaliação inicial e avaliação secundária de transporte","Avaliação de risco e avaliação de custo"], correct:0, explain:"Primeiro avalia-se a cena, depois a vítima."},
+      {q:"O que é decúbito dorsal?", opts:["Deitado de bruços","Deitado de lado","Deitado de costas, face para cima","Sentado com pernas elevadas"], correct:2, explain:"Decúbito dorsal: deitado de costas, face voltada para cima."},
+      {q:"Qual a diferença entre sinal e sintoma?", opts:["São sinônimos","Sinal é o que o socorrista observa; sintoma é o que a vítima relata","Sinal é subjetivo; sintoma é objetivo","Sintoma só existe em vítimas inconscientes"], correct:1, explain:"Sinal = observado pelo socorrista. Sintoma = relatado pela vítima."},
+      {q:"Qual a frequência respiratória normal em lactentes?", opts:["12-20 mrm","20-40 mrm","40-60 mrm","60-80 mrm"], correct:2, explain:"Lactentes: 40 a 60 movimentos respiratórios por minuto."}
+    ]},
+    { id:"licao4b", num:"05", name:"Lição IV · Parte 2", questions:[
+      {q:"Qual manobra de vias aéreas usar quando há suspeita de trauma cervical?", opts:["Extensão de cabeça","Empurre mandibular","Hiperextensão do pescoço","Nenhuma manobra deve ser feita"], correct:1, explain:"Empurre mandibular não movimenta o pescoço, sendo seguro em casos de trauma."},
+      {q:"O que significa a sigla OVACE?", opts:["Obstrução de Vias Aéreas por Corpo Estranho","Ocorrência de Vítima em Acidente com Choque Elétrico","Órgão de Vigilância de Acidentes e Catástrofes de Emergência","Obstrução Ventricular Aguda por Contração Excessiva"], correct:0, explain:"OVACE = Obstrução de Vias Aéreas por Corpo Estranho."},
+      {q:"A manobra de Heimlich pode ser usada em lactentes?", opts:["Sim, sempre que houver engasgo","Não, nunca — usa-se golpes nas costas e compressões torácicas com 2 dedos","Sim, mas com menos força","Apenas se o lactente estiver inconsciente"], correct:1, explain:"Heimlich nunca é usado em lactentes, pelo risco de lesão interna."},
+      {q:"Onde se posicionam as mãos na manobra de Heimlich?", opts:["No centro do peito","Entre o umbigo e o apêndice xifoide","Nas costas, entre as escápulas","Na base do pescoço"], correct:1, explain:"A compressão é feita entre o umbigo e o apêndice xifoide."},
+      {q:"Qual a frequência recomendada de compressões torácicas na RCP?", opts:["60-80 por minuto","80-100 por minuto","100-120 por minuto","120-140 por minuto"], correct:2, explain:"A frequência recomendada é de 100 a 120 compressões por minuto."},
+      {q:"Qual a profundidade mínima das compressões torácicas em adultos?", opts:["2 cm","3 cm","5 cm","8 cm"], correct:2, explain:"A profundidade mínima em adultos é de 5 cm (2 polegadas)."},
+      {q:"Como se realiza a RCP em lactentes?", opts:["Com as duas mãos, 6 cm de profundidade","Com uma mão, 5 cm de profundidade","Com 2 dedos, cerca de 4 cm de profundidade","Não se realiza RCP em lactentes"], correct:2, explain:"Em lactentes: 2 dedos, cerca de 4 cm de profundidade."},
+      {q:"Quais os três sinais que indicam uma parada cardíaca?", opts:["Febre, tosse e dor no peito","Vítima não responsiva, sem respiração e sem pulso","Palidez, sudorese e taquicardia","Confusão mental, sede e fraqueza"], correct:1, explain:"Não responsiva, sem respiração e sem pulso indicam parada cardíaca."},
+      {q:"Se a vítima engasgada ainda consegue tossir e falar, o que fazer?", opts:["Aplicar imediatamente a manobra de Heimlich","Apenas estimulá-la a tossir, sem aplicar manobra","Golpear as costas com força","Iniciar RCP preventivamente"], correct:1, explain:"Se ainda tosse e fala, apenas estimule a tossir — nenhuma manobra ainda."},
+      {q:"Onde se posicionam as mãos para realizar a RCP em adultos?", opts:["Na base do pescoço","Na linha intermamilar, centro do tórax","Na parte inferior do abdômen","No lado esquerdo do peito, sobre as costelas"], correct:1, explain:"As mãos ficam na linha intermamilar, centro do tórax."}
+    ]},
+    { id:"licao4c", num:"06", name:"Lição IV · Parte 3", questions:[
+      {q:"Como se apresenta o sangramento na hemorragia arterial?", opts:["Sai lento e contínuo, vermelho escuro","Jorra de forma pulsátil, vermelho vivo","Sai lentamente, pouco volume","Não há sangramento visível"], correct:1, explain:"Hemorragia arterial: jorro pulsátil, vermelho vivo."},
+      {q:"Qual a primeira técnica para controlar uma hemorragia externa?", opts:["Torniquete imediato","Pressão direta sobre o ferimento","Elevar o membro sem pressionar","Aplicar gelo diretamente no local"], correct:1, explain:"A pressão direta é sempre a primeira técnica a ser aplicada."},
+      {q:"O torniquete é ensinado neste curso básico (CBAE)?", opts:["Sim, é a técnica principal","Não, é considerada técnica avançada","Apenas para membros inferiores","Apenas em caso de amputação"], correct:1, explain:"O torniquete é técnica avançada, não ensinada neste curso básico."},
+      {q:"O que caracteriza o choque hipovolêmico/hemorrágico?", opts:["PA sistólica acima de 140 mmHg","PA sistólica abaixo de 90 mmHg, pulso fraco e rápido, pele fria e pálida","Febre alta e pele quente","Pulso lento e pele avermelhada"], correct:1, explain:"PA sistólica < 90 mmHg, pulso fraco/rápido, pele fria/pálida/úmida."},
+      {q:"Como tratar uma vítima em choque hipovolêmico?", opts:["Sentar e oferecer água","Decúbito dorsal, elevar pernas, controlar hemorragia, manter aquecida, sem comida/bebida","Deixar em pé para melhorar a circulação","Aplicar compressas quentes diretamente na ferida"], correct:1, explain:"Decúbito dorsal, pernas elevadas, controlar sangramento, manter aquecida, nunca dar de comer/beber."},
+      {q:"O que causa o choque anafilático?", opts:["Perda excessiva de sangue","Reação alérgica severa a medicamento, picada ou alimento","Exposição prolongada ao frio","Fratura exposta não tratada"], correct:1, explain:"Choque anafilático é causado por reação alérgica severa."},
+      {q:"Qual a diferença entre fratura fechada e aberta?", opts:["Fechada dói mais que a aberta","Na fechada a pele permanece íntegra; na aberta o osso rompe a pele","Não há diferença prática","Fratura aberta só ocorre em membros inferiores"], correct:1, explain:"Fechada: pele íntegra. Aberta/exposta: osso atravessa a pele."},
+      {q:"O que representa o mnemônico DEDI?", opts:["Dor, Edema, Deformidade, Impotência funcional","Dormência, Edema, Dor, Inchaço","Deformidade, Entorse, Dor, Inflamação","Dor, Estresse, Desmaio, Instabilidade"], correct:0, explain:"DEDI: Dor, Edema, Deformidade, Impotência funcional."},
+      {q:"Ao suspeitar de uma fratura, o que nunca se deve fazer?", opts:["Imobilizar a articulação acima e abaixo","Tentar reposicionar o osso na posição original","Acionar o serviço de emergência","Observar sinais de deformidade"], correct:1, explain:"Nunca se deve tentar reposicionar o osso."},
+      {q:"Como se apresenta a hemorragia venosa?", opts:["Jorra de forma pulsátil","Sai de forma lenta e contínua, vermelho escuro","Não apresenta sangramento visível","Sai em jato intermitente, vermelho claro"], correct:1, explain:"Hemorragia venosa: sai lenta e continuamente, vermelho escuro."}
+    ]},
+    { id:"licao4d", num:"07", name:"Lição IV · Parte 4", questions:[
+      {q:"O que caracteriza uma queimadura de 3º grau?", opts:["Dor intensa e vermelhidão","Bolhas e dor forte","Sem dor no local (nervos destruídos), aspecto de couro","Apenas leve desconforto"], correct:2, explain:"3º grau: nervos destruídos, sem dor local, aspecto de couro."},
+      {q:"Por quanto tempo resfriar uma queimadura menor em água corrente?", opts:["30 segundos a 1 minuto","3 a 5 minutos","10 a 15 minutos","Não se deve resfriar queimaduras"], correct:1, explain:"Resfriar por 3 a 5 minutos em água corrente a cerca de 15°C."},
+      {q:"O que nunca se deve aplicar sobre uma queimadura?", opts:["Curativo estéril","Água corrente fria","Cremes, pomadas, pasta de dente ou manteiga","Gaze limpa"], correct:2, explain:"Nunca aplicar cremes, pomadas, pasta de dente ou manteiga."},
+      {q:"Qual a técnica indicada quando o fogo pega na roupa da vítima?", opts:["Correr para dispersar o fogo","PARE, DEITE e ROLE","Jogar água quente imediatamente","Remover a roupa em chamas com as mãos"], correct:1, explain:"A técnica é PARE, DEITE e ROLE."},
+      {q:"Em queimaduras químicas, por quanto tempo lavar o local?", opts:["1 minuto","5 minutos","No mínimo 15 minutos","Não se deve lavar, apenas cobrir"], correct:2, explain:"Lavar com água corrente por no mínimo 15 minutos."},
+      {q:"Em caso de intoxicação por ingestão, deve-se provocar vômito?", opts:["Sim, sempre","Não, nunca, exceto sob orientação médica","Apenas se a vítima estiver consciente","Apenas em crianças"], correct:1, explain:"Nunca provocar vômito, exceto sob orientação médica."},
+      {q:"Qual o telefone do Centro de Informações Toxicológicas?", opts:["0800 643 5252","0800 725 0000","192","199"], correct:0, explain:"O telefone é 0800 643 5252."},
+      {q:"Por que a picada de cascavel (Crotalus) é perigosa mesmo doendo pouco?", opts:["Causa apenas irritação na pele","Seu veneno é neurotóxico e pode levar a parada cardiorrespiratória","Não representa risco real","Causa apenas inchaço temporário"], correct:1, explain:"O veneno neurotóxico pode levar a parada cardiorrespiratória."},
+      {q:"Até quantas horas após a picada de aranha-marrom o soro antiloxoscélico ainda é eficaz?", opts:["6 horas","12 horas","24 horas","36 horas"], correct:3, explain:"O soro antiloxoscélico é eficaz até 36 horas após a picada."},
+      {q:"Como retirar corretamente o ferrão de uma abelha?", opts:["Apertando com os dedos","Usando uma pinça","Raspando-o","Puxando com força"], correct:2, explain:"O ferrão deve ser retirado raspando, nunca apertando ou com pinça."},
+      {q:"Quais sintomas indicam picada de cobra-coral-verdadeira (Micrurus)?", opts:["Sangramento intenso e edema local","Pálpebras caídas e visão turva, podendo evoluir para paralisia","Dor local intensa apenas","Febre alta e calafrios"], correct:1, explain:"Sintomas neurotóxicos: pálpebras caídas, visão turva, paralisia."},
+      {q:"Qual lagarta pode causar um quadro hemorrágico grave?", opts:["Lagarta-de-fogo comum","Lagarta Lonomia (taturana)","Lagarta verde comum","Nenhuma lagarta brasileira oferece risco"], correct:1, explain:"A lagarta Lonomia (taturana) pode causar quadro hemorrágico grave."}
+    ]},
+    { id:"licao4e", num:"08", name:"Lição IV · Parte 5", questions:[
+      {q:"Quando é permitido mover uma vítima antes da chegada do socorro especializado?", opts:["Sempre que possível","Apenas se houver risco iminente (fogo, desabamento, gases tóxicos)","Nunca, em nenhuma hipótese","Apenas se a vítima pedir"], correct:1, explain:"Só se deve mover a vítima havendo risco iminente."},
+      {q:"O que são precauções universais?", opts:["Regras de trânsito para ambulâncias","Medidas de proteção pessoal contra contaminação por sangue/fluidos corporais","Protocolos exclusivos de hospitais","Normas de construção de quartéis"], correct:1, explain:"São medidas de proteção pessoal contra contaminação por sangue/fluidos."},
+      {q:"Contra quais doenças o socorrista deve estar vacinado, segundo o manual?", opts:["Gripe e sarampo","Hepatite B e tétano","Covid-19 apenas","Febre amarela apenas"], correct:1, explain:"O manual recomenda vacinação contra Hepatite B e tétano."},
+      {q:"Qual técnica de transporte usa 1 socorrista mas não sustenta cabeça e pescoço?", opts:["Transporte tipo cadeirinha","Transporte tipo bombeiro","Levantamento com três pessoas","Arrastamento pelas axilas"], correct:1, explain:"O transporte tipo bombeiro usa 1 socorrista, sem sustentar cabeça/pescoço."},
+      {q:"A maca deve ir até a vítima ou a vítima até a maca?", opts:["A vítima deve sempre ir até a maca","A maca deve sempre ir até a vítima","Depende da gravidade do caso","Não há orientação padrão"], correct:1, explain:"A maca deve sempre ser levada até a vítima."},
+      {q:"Cite um item que compõe o kit básico de primeiros socorros mencionado no manual.", opts:["Estetoscópio profissional","Gaze e ataduras","Kit de sutura","Desfibrilador portátil"], correct:1, explain:"Gaze e ataduras fazem parte do kit básico de primeiros socorros."}
+    ]}
+  ];
+
   var STORAGE_KEY = "cbae_flashcards_v1";
+  var QUIZ_STORAGE_KEY = "cbae_simulado_v1";
 
   // ---------------- STATE ----------------
   var state = {
@@ -530,7 +756,18 @@
     order: [],                // array of card refs {deckId, idx}
     queue: [],                // remaining queue (array indices into order-ish, but we store card refs directly)
     current: null,            // current card ref
-    flipped: false
+    flipped: false,
+    homeMode: "cards"         // "cards" or "quiz" — which tab is active on the home screen
+  };
+
+  var quizBest = loadQuizBest();   // { deckId: { score, total } }
+  var quiz = {                     // transient state for an in-progress simulado
+    deckId: null,
+    questions: [],                 // shuffled questions (with shuffled options) for this session
+    index: 0,
+    score: 0,
+    answered: false,
+    log: []                        // [{q, chosen, correctText, ok}] for the results review
   };
 
   function loadMastery(){
@@ -561,6 +798,20 @@
     for(var i=0;i<DECKS.length;i++){ if(DECKS[i].id===id) return DECKS[i]; }
     return null;
   }
+  function getSimulado(id){
+    for(var i=0;i<SIMULADOS.length;i++){ if(SIMULADOS[i].id===id) return SIMULADOS[i]; }
+    return null;
+  }
+
+  function loadQuizBest(){
+    try{
+      var raw = localStorage.getItem(QUIZ_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){ return {}; }
+  }
+  function saveQuizBest(){
+    try{ localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(quizBest)); }catch(e){}
+  }
 
   // ---------------- DOM refs ----------------
   var homeView = document.getElementById("homeView");
@@ -587,42 +838,113 @@
   var studyAgainBtn = document.getElementById("studyAgainBtn");
   var backHomeBtn = document.getElementById("backHomeBtn");
   var resetAllBtn = document.getElementById("resetAllBtn");
+  var heroDesc = document.getElementById("heroDesc");
+  var modeToggle = document.getElementById("modeToggle");
+  var generalNum = document.getElementById("generalNum");
+  var generalName = document.getElementById("generalName");
+  var generalDesc = document.getElementById("generalDesc");
+
+  var quizView = document.getElementById("quizView");
+  var quizDoneView = document.getElementById("quizDoneView");
+  var quizProgressFill = document.getElementById("quizProgressFill");
+  var quizTag = document.getElementById("quizTag");
+  var quizQ = document.getElementById("quizQ");
+  var quizOptions = document.getElementById("quizOptions");
+  var quizExplain = document.getElementById("quizExplain");
+  var quizNextRow = document.getElementById("quizNextRow");
+  var quizNextBtn = document.getElementById("quizNextBtn");
+  var resultScore = document.getElementById("resultScore");
+  var resultPct = document.getElementById("resultPct");
+  var resultMsg = document.getElementById("resultMsg");
+  var reviewList = document.getElementById("reviewList");
+  var quizAgainBtn = document.getElementById("quizAgainBtn");
+  var quizBackHomeBtn = document.getElementById("quizBackHomeBtn");
 
   // ---------------- RENDER HOME ----------------
   function renderHome(){
     modGrid.innerHTML = "";
-    var totalAll = 0, masteredAll = 0;
 
-    DECKS.forEach(function(deck){
-      totalAll += deck.cards.length;
-      var m = masteredCount(deck.id, deck.cards.length);
-      masteredAll += m;
-
-      var card = document.createElement("button");
-      card.className = "mod-card";
-      card.innerHTML =
-        '<div class="mod-num">' + deck.num + '</div>' +
-        '<p class="mod-name display">' + escapeHtml(deck.name) + '</p>' +
-        '<p class="mod-desc">' + escapeHtml(deck.desc) + '</p>' +
-        '<div class="mod-foot">' +
-          '<span>' + deck.cards.length + ' cartões</span>' +
-          '<span class="mod-badge' + (m===deck.cards.length ? ' done':'') + '">' + m + '/' + deck.cards.length + '</span>' +
-        '</div>';
-      card.addEventListener("click", function(){ startDeck(deck.id); });
-      modGrid.appendChild(card);
+    Array.prototype.forEach.call(modeToggle.querySelectorAll(".mode-btn"), function(btn){
+      btn.classList.toggle("active", btn.getAttribute("data-mode") === state.homeMode);
     });
 
-    var geralTotal = totalAll;
-    generalBadge.textContent = geralTotal + " cartões";
-    totalStats.textContent = masteredAll + " de " + totalAll + " cartões dominados no total";
+    if(state.homeMode === "quiz"){
+      heroDesc.innerHTML = 'Escolha um módulo e faça um simulado com questões de múltipla escolha (A a D), no mesmo estilo da prova teórica do CBAE. Veja sua nota e revise o que errou ao final.';
+
+      var totalQAll = 0, bestAll = 0;
+      SIMULADOS.forEach(function(dk){
+        totalQAll += dk.questions.length;
+        var best = quizBest[dk.id];
+        var bestScore = best ? best.score : 0;
+        if(best) bestAll += best.score;
+
+        var card = document.createElement("button");
+        card.className = "mod-card";
+        card.innerHTML =
+          '<div class="mod-num">' + dk.num + '</div>' +
+          '<p class="mod-name display">' + escapeHtml(dk.name) + '</p>' +
+          '<p class="mod-desc">' + dk.questions.length + ' questões de múltipla escolha</p>' +
+          '<div class="mod-foot">' +
+            '<span>' + dk.questions.length + ' questões</span>' +
+            '<span class="mod-badge' + (best && best.score===best.total ? ' done':'') + '">' + (best ? (best.score + '/' + best.total) : '— / ' + dk.questions.length) + '</span>' +
+          '</div>';
+        card.addEventListener("click", function(){ startQuiz(dk.id); });
+        modGrid.appendChild(card);
+      });
+
+      generalNum.textContent = "SIMULADO";
+      generalName.textContent = "GERAL — TODOS OS MÓDULOS";
+      generalDesc.textContent = "Mistura as " + totalQAll + " questões das 9 partes, embaralhadas, como um simulado completo da prova.";
+      var bestGeral = quizBest["geral"];
+      generalBadge.textContent = bestGeral ? (bestGeral.score + "/" + bestGeral.total) : totalQAll + " questões";
+
+      totalStats.textContent = "Melhor pontuação acumulada: " + bestAll + " de " + totalQAll + " questões";
+    } else {
+      heroDesc.innerHTML = 'Escolha um módulo e treine por recordação ativa. Marque cada cartão como <strong>lembrei</strong> ou <strong>não lembrei</strong> — os que você errar voltam a aparecer na mesma sessão.';
+
+      var totalAll = 0, masteredAll = 0;
+      DECKS.forEach(function(deck){
+        totalAll += deck.cards.length;
+        var m = masteredCount(deck.id, deck.cards.length);
+        masteredAll += m;
+
+        var card = document.createElement("button");
+        card.className = "mod-card";
+        card.innerHTML =
+          '<div class="mod-num">' + deck.num + '</div>' +
+          '<p class="mod-name display">' + escapeHtml(deck.name) + '</p>' +
+          '<p class="mod-desc">' + escapeHtml(deck.desc) + '</p>' +
+          '<div class="mod-foot">' +
+            '<span>' + deck.cards.length + ' cartões</span>' +
+            '<span class="mod-badge' + (m===deck.cards.length ? ' done':'') + '">' + m + '/' + deck.cards.length + '</span>' +
+          '</div>';
+        card.addEventListener("click", function(){ startDeck(deck.id); });
+        modGrid.appendChild(card);
+      });
+
+      generalNum.textContent = "REVISÃO";
+      generalName.textContent = "TODOS OS MÓDULOS";
+      generalDesc.textContent = "Mistura cartões das 9 partes para uma revisão final geral.";
+      generalBadge.textContent = totalAll + " cartões";
+      totalStats.textContent = masteredAll + " de " + totalAll + " cartões dominados no total";
+    }
 
     homeView.hidden = false;
     studyView.hidden = true;
     doneView.hidden = true;
+    quizView.hidden = true;
+    quizDoneView.hidden = true;
     barBack.hidden = true;
     barCount.hidden = true;
     barTitle.innerHTML = "CARTÕES DE ESTUDO<small>Manual CBAE — CBMSC</small>";
   }
+
+  Array.prototype.forEach.call(modeToggle.querySelectorAll(".mode-btn"), function(btn){
+    btn.addEventListener("click", function(){
+      state.homeMode = btn.getAttribute("data-mode");
+      renderHome();
+    });
+  });
 
   function escapeHtml(s){
     return String(s).replace(/[&<>"']/g, function(c){
@@ -630,10 +952,14 @@
     });
   }
 
-  generalCard.addEventListener("click", function(){ startDeck("geral"); });
+  generalCard.addEventListener("click", function(){
+    if(state.homeMode === "quiz"){ startQuiz("geral"); } else { startDeck("geral"); }
+  });
   resetAllBtn.addEventListener("click", function(){
-    if(confirm("Isso vai apagar todo o progresso salvo em todos os módulos. Continuar?")){
+    if(confirm("Isso vai apagar todo o progresso salvo em todos os módulos (cartões e simulados). Continuar?")){
       state.mastery = {};
+      quizBest = {};
+      saveQuizBest();
       saveMastery();
       renderHome();
     }
@@ -773,18 +1099,192 @@
   backHomeBtn.addEventListener("click", renderHome);
   barBack.addEventListener("click", renderHome);
 
+  // ================= SIMULADO (QUIZ) =================
+  var LETTERS = ["A","B","C","D"];
+
+  function buildQuizQuestions(deckId){
+    var raw;
+    if(deckId === "geral"){
+      raw = [];
+      SIMULADOS.forEach(function(dk){
+        dk.questions.forEach(function(qq){ raw.push({src:dk.name, q:qq}); });
+      });
+    } else {
+      var dk = getSimulado(deckId);
+      raw = dk.questions.map(function(qq){ return {src:dk.name, q:qq}; });
+    }
+    raw = shuffle(raw.slice());
+
+    // Build session questions with options re-shuffled (correct index remapped)
+    return raw.map(function(item){
+      var qq = item.q;
+      var idxs = [0,1,2,3];
+      shuffle(idxs);
+      var opts = idxs.map(function(i){ return qq.opts[i]; });
+      var correctPos = idxs.indexOf(qq.correct);
+      return { src:item.src, text:qq.q, opts:opts, correct:correctPos, explain:qq.explain };
+    });
+  }
+
+  function startQuiz(deckId){
+    quiz.deckId = deckId;
+    quiz.questions = buildQuizQuestions(deckId);
+    quiz.index = 0;
+    quiz.score = 0;
+    quiz.answered = false;
+    quiz.log = [];
+
+    homeView.hidden = true;
+    doneView.hidden = true;
+    quizDoneView.hidden = true;
+    studyView.hidden = true;
+    quizView.hidden = false;
+    barBack.hidden = false;
+    barCount.hidden = false;
+
+    var label = deckId === "geral" ? "Simulado geral" : getSimulado(deckId).name;
+    barTitle.innerHTML = escapeHtml(label) + "<small>simulado — múltipla escolha</small>";
+
+    renderQuizQuestion();
+  }
+
+  function renderQuizQuestion(){
+    quiz.answered = false;
+    var total = quiz.questions.length;
+    var q = quiz.questions[quiz.index];
+
+    barCount.textContent = "Questão " + (quiz.index+1) + "/" + total;
+    quizProgressFill.style.width = Math.round((quiz.index/total)*100) + "%";
+    quizTag.textContent = quiz.deckId === "geral" ? q.src.toUpperCase() : "QUESTÃO " + (quiz.index+1);
+    quizQ.textContent = q.text;
+
+    quizExplain.hidden = true;
+    quizExplain.textContent = "";
+    quizNextRow.hidden = true;
+
+    quizOptions.innerHTML = "";
+    q.opts.forEach(function(optText, i){
+      var btn = document.createElement("button");
+      btn.className = "quiz-opt";
+      btn.innerHTML = '<span class="letter">' + LETTERS[i] + '</span><span>' + escapeHtml(optText) + '</span>';
+      btn.addEventListener("click", function(){ selectOption(i); });
+      quizOptions.appendChild(btn);
+    });
+  }
+
+  function selectOption(i){
+    if(quiz.answered) return;
+    quiz.answered = true;
+
+    var q = quiz.questions[quiz.index];
+    var ok = (i === q.correct);
+    if(ok) quiz.score++;
+
+    quiz.log.push({
+      text:q.text,
+      chosen: q.opts[i],
+      correctText: q.opts[q.correct],
+      ok: ok
+    });
+
+    var btns = quizOptions.querySelectorAll(".quiz-opt");
+    Array.prototype.forEach.call(btns, function(btn, idx){
+      btn.disabled = true;
+      if(idx === q.correct) btn.classList.add("correct");
+      else if(idx === i) btn.classList.add("incorrect");
+    });
+
+    quizExplain.hidden = false;
+    quizExplain.innerHTML = (ok ? "<strong>Certinho.</strong> " : "<strong>Não é essa.</strong> ") + escapeHtml(q.explain);
+
+    quizNextRow.hidden = false;
+    quizNextBtn.textContent = (quiz.index === quiz.questions.length - 1) ? "Ver resultado →" : "Próxima →";
+  }
+
+  quizNextBtn.addEventListener("click", function(){
+    if(quiz.index < quiz.questions.length - 1){
+      quiz.index++;
+      renderQuizQuestion();
+    } else {
+      showQuizResult();
+    }
+  });
+
+  function showQuizResult(){
+    quizView.hidden = true;
+    quizDoneView.hidden = false;
+    barCount.hidden = true;
+
+    var total = quiz.questions.length;
+    var score = quiz.score;
+    var pct = total ? Math.round((score/total)*100) : 0;
+
+    resultScore.textContent = score + "/" + total;
+    resultPct.textContent = pct + "% de acerto";
+
+    resultMsg.className = "result-msg " + (pct>=80 ? "good" : pct>=50 ? "mid" : "low");
+    resultMsg.textContent = pct>=80 ? "Muito bem — você está pronto para esse módulo."
+      : pct>=50 ? "Bom começo. Vale revisar os pontos que errou."
+      : "Esse módulo ainda precisa de reforço — releia o guia antes de refazer.";
+
+    // Persist best score for this deck
+    var prevBest = quizBest[quiz.deckId];
+    if(!prevBest || score > prevBest.score){
+      quizBest[quiz.deckId] = { score:score, total:total };
+      saveQuizBest();
+    }
+
+    // Review list — only the missed questions
+    reviewList.innerHTML = "";
+    var missed = quiz.log.filter(function(l){ return !l.ok; });
+    if(missed.length === 0){
+      var okMsg = document.createElement("p");
+      okMsg.style.textAlign = "center";
+      okMsg.style.color = "var(--ink-soft)";
+      okMsg.style.fontSize = "0.85rem";
+      okMsg.textContent = "Você acertou todas — nenhuma questão para revisar aqui.";
+      reviewList.appendChild(okMsg);
+    } else {
+      missed.forEach(function(l){
+        var div = document.createElement("div");
+        div.className = "review-item";
+        div.innerHTML =
+          '<div class="rq">' + escapeHtml(l.text) + '</div>' +
+          '<div><span class="rw">' + escapeHtml(l.chosen) + '</span><span class="ra">✓ ' + escapeHtml(l.correctText) + '</span></div>';
+        reviewList.appendChild(div);
+      });
+    }
+  }
+
+  quizAgainBtn.addEventListener("click", function(){ startQuiz(quiz.deckId); });
+  quizBackHomeBtn.addEventListener("click", renderHome);
+
   // Keyboard support
   document.addEventListener("keydown", function(e){
-    if(studyView.hidden) return;
-    if(e.code === "Space" || e.key === "Enter"){
-      e.preventDefault();
-      flipCard.click();
-    } else if(state.flipped && (e.key === "ArrowRight")){
-      yesBtn.click();
-    } else if(state.flipped && (e.key === "ArrowLeft")){
-      noBtn.click();
-    } else if(e.key === "Escape"){
-      renderHome();
+    if(!studyView.hidden){
+      if(e.code === "Space" || e.key === "Enter"){
+        e.preventDefault();
+        flipCard.click();
+      } else if(state.flipped && (e.key === "ArrowRight")){
+        yesBtn.click();
+      } else if(state.flipped && (e.key === "ArrowLeft")){
+        noBtn.click();
+      } else if(e.key === "Escape"){
+        renderHome();
+      }
+      return;
+    }
+    if(!quizView.hidden){
+      var k = e.key.toUpperCase();
+      var letterIdx = LETTERS.indexOf(k);
+      if(!quiz.answered && letterIdx > -1 && letterIdx < quiz.questions[quiz.index].opts.length){
+        selectOption(letterIdx);
+      } else if(quiz.answered && (e.key === "Enter" || e.code === "Space")){
+        e.preventDefault();
+        quizNextBtn.click();
+      } else if(e.key === "Escape"){
+        renderHome();
+      }
     }
   });
 
