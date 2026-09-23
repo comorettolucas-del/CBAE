@@ -337,6 +337,34 @@
   .review-item .ra{ color:var(--green); }
   .review-item .rw{ color:var(--red); text-decoration:line-through; margin-right:6px; }
 
+  .mode-toggle{ flex-wrap:wrap; }
+  .mode-btn{ flex:1; white-space:nowrap; }
+
+  /* ---------- MANUAL QUESTIONS ---------- */
+  .manual-lesson-head{
+    font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:1.3rem;
+    color:var(--red); margin:26px 0 14px; padding-bottom:6px; border-bottom:2px solid var(--red);
+  }
+  .manual-lesson-head:first-child{ margin-top:0; }
+  .manual-item{
+    background:var(--card); border:2px solid var(--line); box-shadow:var(--shadow);
+    padding:18px 20px; margin-bottom:18px; max-width:720px;
+  }
+  .manual-q{
+    font-weight:700; line-height:1.5; margin:0 0 12px; white-space:pre-line; font-size:0.95rem;
+  }
+  .manual-toggle{
+    background:none; border:2px solid var(--line); color:var(--ink-soft);
+    font-size:0.78rem; font-weight:700; padding:6px 14px;
+  }
+  .manual-toggle:hover{ border-color:var(--ink-soft); color:var(--ink); }
+  .manual-answer{
+    margin-top:14px; padding:12px 14px; background:var(--paper-2);
+    border-left:3px solid var(--green); font-size:0.88rem; line-height:1.55;
+    white-space:pre-line; color:var(--ink);
+  }
+  .manual-answer[hidden]{ display:none; }
+
   [hidden]{ display:none !important; }
 </style>
 </head>
@@ -366,6 +394,7 @@
     <div class="mode-toggle" id="modeToggle">
       <button class="mode-btn active" data-mode="cards">CARTÕES</button>
       <button class="mode-btn" data-mode="quiz">SIMULADO</button>
+      <button class="mode-btn" data-mode="manual">QUESTÕES DO MANUAL</button>
     </div>
 
     <p class="section-label">MÓDULOS</p>
@@ -458,6 +487,11 @@
         <button class="ghost-btn" id="quizBackHomeBtn">Voltar aos módulos</button>
       </div>
     </div>
+  </section>
+
+  <!-- MANUAL QUESTIONS VIEW -->
+  <section id="manualView" hidden>
+    <div id="manualContent"></div>
   </section>
 
 </main>
@@ -746,6 +780,57 @@
     ]}
   ];
 
+  // Questões oficiais de "AVALIAÇÃO DA LIÇÃO" compiladas do próprio manual (fim de cada lição),
+  // com respostas elaboradas a partir do conteúdo do material.
+  var QUESTOES_MANUAL = [
+    { id:"licao1", num:"01", name:"Lição I", items:[
+      { q:"1. O que é recomendável fazer caso você se depare com uma enxurrada? Como você pode colaborar para evitar os alagamentos?",
+        a:"Diante de uma enxurrada: busque imediatamente um local alto e seguro, afastando-se de córregos, encostas e áreas de escoamento rápido de água. Nunca tente atravessar a pé ou de veículo uma área tomada por enxurrada — a força da água pode arrastar pessoas e carros com facilidade. Acione a Defesa Civil (199) e o Corpo de Bombeiros (193), informando a situação.\n\nPara colaborar na prevenção de alagamentos: não jogue lixo em bueiros, ruas ou cursos d'água — o entupimento da drenagem é uma das principais causas de alagamento em áreas urbanas. Mantenha calhas, ralos e bueiros próximos à sua residência limpos e desobstruídos." },
+      { q:"2. O que você entende por proteção civil?",
+        a:"Proteção civil é o conjunto de ações de prevenção, mitigação, preparação, resposta e recuperação, desenvolvidas pelo poder público em conjunto com a comunidade, com o objetivo de reduzir os riscos de desastres e proteger a população, o patrimônio e o meio ambiente diante de eventos adversos naturais ou tecnológicos." },
+      { q:"3. Como você pode colaborar com a gestão de risco nos casos de incêndios florestais?",
+        a:"Nunca ateando fogo em vegetação, mato ou lixo sem controle, e respeitando períodos de proibição de queimadas. Ao identificar qualquer foco de incêndio, comunique imediatamente o Corpo de Bombeiros, a Defesa Civil ou a Polícia Militar, sem tentar combatê-lo sozinho. Em propriedades rurais, manter aceiros (faixas de segurança) limpos também ajuda a conter o avanço do fogo." },
+      { q:"4. Assinale V para verdadeiro e F para falso nas afirmativas sobre como se proteger em caso de catástrofes naturais.\n\n( ) Em caso de vendavais você deve se certificar que objetos não caiam, colocando no piso o que apresentar risco de queda.\n\n( ) Embaixo de árvores é um dos locais seguros para se proteger durante uma tempestade de raios.\n\n( ) Em casos de desastres hidrológicos você deve avisar imediatamente o Corpo de Bombeiros e a Defesa Civil pelos telefones de emergência 193 e 199 (respectivamente), sobre áreas inundadas e pessoas ilhadas.\n\n( ) Em caso de deslocamento de massas você deve entrar no local do deslizamento para retirar objetos de importância.\n\n( ) Durante uma chuva de granizo busque abrigo seguro evitando permanecer debaixo de árvores ou coberturas mais frágeis.",
+        a:"(V) Verdadeiro — proteger objetos que possam cair é uma medida preventiva básica antes de um vendaval.\n\n(F) Falso — pelo contrário: árvores são um dos locais mais perigosos durante tempestades de raios, por atraírem descargas elétricas. Evite árvores, estruturas altas e áreas abertas.\n\n(V) Verdadeiro — 193 (Bombeiros) e 199 (Defesa Civil) devem ser acionados para informar áreas inundadas e pessoas ilhadas.\n\n(F) Falso — nunca entre em uma área de deslizamento, ativo ou com risco iminente, para resgatar pertences. A prioridade é se afastar e preservar a vida.\n\n(V) Verdadeiro — evite árvores e coberturas frágeis durante o granizo, pelo risco de queda e desabamento." }
+    ]},
+    { id:"licao2", num:"02", name:"Lição II", items:[
+      { q:"1. Explique cada um dos conceitos apresentados:\na) acidente:\nb) emergência:\nc) urgência:",
+        a:"a) Acidente: evento inesperado (ou sequência de eventos fortuitos) que gera uma consequência específica indesejada, causando dano de ordem pessoal, material, financeiro ou ambiental.\n\nb) Emergência: constatação médica de agravo à saúde que implica risco iminente de morte ou sofrimento intenso, exigindo tratamento médico imediato (Portaria 354/2014, Ministério da Saúde).\n\nc) Urgência: ocorrência imprevista de agravo à saúde, com ou sem risco potencial à vida, cujo portador necessita de assistência médica imediata." },
+      { q:"2. Preencha a segunda coluna de acordo com o número correspondente ao serviço de emergência.\n\na) CBMSC         ( ) 199\nb) PMSC          ( ) 193\nc) Defesa Civil  ( ) 192\nd) SAMU          ( ) 190",
+        a:"a) CBMSC → 193\nb) PMSC → 190\nc) Defesa Civil → 199\nd) SAMU → 192" },
+      { q:"3. Cite pelo menos cinco (05) ações de prevenção de acidentes domésticos.",
+        a:"1) Manter produtos de limpeza e medicamentos fora do alcance de crianças.\n2) Usar as bocas de trás do fogão e virar os cabos das panelas para dentro.\n3) Instalar proteções (redes/telas) em janelas e sacadas onde há crianças.\n4) Manter a fiação elétrica em bom estado, sem sobrecarregar tomadas.\n5) Usar tapetes antiderrapantes em banheiros e manter escadas bem iluminadas, para evitar quedas." },
+      { q:"4. Quais as orientações básicas devemos seguir quando nos deparamos com um acidente de trânsito?",
+        a:"Manter a calma; avaliar a segurança da cena antes de agir (sinalizar o local, verificar riscos como vazamento de combustível ou fiação exposta); acionar os serviços de emergência adequados (193 Bombeiros, 192 SAMU, 190 PM); evitar remover vítimas do veículo ou retirar capacetes de motociclistas, salvo risco iminente; prestar apoio dentro do seu nível de capacitação até a chegada de profissionais." },
+      { q:"5. Apresente algumas das ações de prevenção a acidentes de trabalho.",
+        a:"Uso correto e constante dos Equipamentos de Proteção Individual (EPI); realização de pausas regulares (a cada 2h, por exemplo) para evitar fadiga; seguir rigorosamente os procedimentos e normas de segurança do local de trabalho; não confiar apenas na experiência para dispensar cuidados básicos; manter o ambiente de trabalho organizado e devidamente sinalizado." },
+      { q:"6. Como prestar auxílio quando se deparar com uma situação de afogamento?",
+        a:"Não entre na água sem necessidade ou sem preparo. Acione imediatamente o 193. Se possível, lance um objeto flutuante para que a vítima se aproxime sem que você precise entrar na água. Observe as bandeiras de sinalização da praia (vermelha = alto risco). Após a retirada da vítima da água, verifique os sinais vitais e inicie a RCP se necessário, até a chegada do socorro especializado." }
+    ]},
+    { id:"licao3", num:"03", name:"Lição III", items:[
+      { q:"1. Explique como ocorrem as formas de propagação de calor.",
+        a:"Condução: transferência de calor entre corpos sólidos em contato direto, propagando-se de molécula a molécula.\n\nConvecção: transferência de calor pelo deslocamento de fluidos (líquidos ou gases) aquecidos, que se movem naturalmente por diferença de densidade.\n\nIrradiação: transferência de calor à distância, por meio de ondas eletromagnéticas, sem necessidade de contato ou de um meio material." },
+      { q:"2. Relacione as colunas a seguir, indicando para cada sistema preventivo sua finalidade.\n\na) Equipamentos portáteis de controle dos princípios de incêndios, que podem ser utilizados por pessoas leigas.\nb) Sistema formado por mangueiras, esguichos, tubulações e reserva de água para combate a incêndios.\nc) Tem o objetivo de servir de rota de fuga para os usuários de uma determinada edificação.\nd) Tem o objetivo de indicar a rota de fuga de uma determinada edificação.\ne) Instalados nas rotas de fuga, objetivam facilitar a identificação de objetos, obstáculos e pessoas em caso de falta ou corte de energia elétrica.\nf) Visa alertar aos usuários da edificação quando da ocorrência de um incêndio.\n\n( ) Extintores  ( ) SHP  ( ) Sinalização de Abandono  ( ) Iluminação de Emergência  ( ) Saídas de Emergência  ( ) Alarme e detecção",
+        a:"Extintores → a\nSHP → b\nSaídas de Emergência → c\nSinalização de Abandono de Local → d\nIluminação de Emergência → e\nAlarme e detecção → f" },
+      { q:"3. Cite quais as primeiras ações devem ser realizadas ao identificar um princípio de incêndio.",
+        a:"Manter a calma e dar o alerta (avisar as pessoas ao redor e/ou acionar o alarme); avaliar se é seguro tentar combater o princípio de incêndio com um extintor adequado à classe do fogo; se não for seguro, ou se o fogo já estiver alastrado, evacuar imediatamente a área e acionar o Corpo de Bombeiros (193); isolar a área para evitar que outras pessoas se exponham ao risco." },
+      { q:"4. Relacione qual o método de extinção de incêndio é o mais adequado para a respectiva classe de incêndio.\n\nMétodo de extinção: (1) Abafamento  (2) Resfriamento  (3) Retirada do Material\n\n( ) Incêndio Classe A: envolvendo combustíveis sólidos comuns.\n( ) Incêndio Classe B: envolvendo líquidos inflamáveis, graxas e gases combustíveis.\n( ) Incêndio Classe C: envolvendo equipamentos energizados.\n( ) Incêndio Classe D: envolvendo materiais combustíveis pirofóricos (magnésio, lítio etc.).",
+        a:"Classe A → (2) Resfriamento\nClasse B → (1) Abafamento\nClasse C → (1) Abafamento\nClasse D → (3) Retirada do Material" }
+    ]},
+    { id:"licao4", num:"04", name:"Lição IV", items:[
+      { q:"1. Explique as posições de referência:\ndecúbito dorsal:\ndecúbito ventral:\ndecúbito lateral:",
+        a:"Decúbito dorsal: vítima deitada de costas, com a face voltada para cima.\n\nDecúbito ventral: vítima deitada de bruços, com a face voltada para baixo.\n\nDecúbito lateral: vítima deitada de lado (direito ou esquerdo), com o corpo apoiado lateralmente." },
+      { q:"2. Cite as precauções universais essenciais que devem ser adotadas durante o atendimento a uma vítima.",
+        a:"Uso de Equipamentos de Proteção Individual (luvas descartáveis, máscara, óculos de proteção); evitar contato direto com sangue e fluidos corporais da vítima; higienizar as mãos antes e depois do atendimento; descartar corretamente materiais perfurocortantes e contaminados; manter-se vacinado contra Hepatite B e tétano." },
+      { q:"3. Leia as afirmativas sobre Hemorragia e marque V para verdadeiro e F para falso:\n\n( ) Na hemorragia arterial o sangue jorra pulsátil e de cor vermelho vivo.\n\n( ) Na hemorragia capilar o sangue sai lento e contínuo com cor vermelho escuro.\n\n( ) Em hemorragia capilar, o sangue sai lentamente dos vasos menores na cor similar ao sangue venoso/arterial.\n\n( ) Hemorragias ou sangramento significam a mesma coisa, ou seja, sangue que escapa de vasos sanguíneos.\n\n( ) O choque hipovolêmico caracteriza-se por falta de volume mínimo de sangue no corpo para manter as funções vitais.",
+        a:"(V) Verdadeiro — é exatamente assim que se identifica uma hemorragia arterial, conforme o texto do manual.\n\n(F) Falso — essa descrição (sangue saindo lento, contínuo e escuro) é a que o manual usa para a hemorragia VENOSA, não a capilar.\n\n(F) Falso/impreciso — o manual diz apenas que a hemorragia capilar tem \"coloração menos viva que na hemorragia arterial\", sem equipará-la à cor do sangue venoso. A afirmativa generaliza além do que o texto realmente diz — vale reler a definição original antes da prova.\n\n(V) Verdadeiro — o próprio manual afirma isso explicitamente: \"hemorragia e sangramento significam a mesma coisa\".\n\n(V) Verdadeiro — é exatamente essa a definição de choque hipovolêmico." },
+      { q:"4. Cite as principais diferenças no atendimento de fraturas abertas e fechadas.",
+        a:"Na fratura fechada, a pele permanece íntegra — o atendimento se resume a imobilizar o membro (incluindo a articulação acima e abaixo do local). Na fratura aberta (exposta), o osso rompe e atravessa a pele, exigindo cuidado adicional: cobrir o ferimento com um curativo estéril antes de imobilizar, para reduzir o risco de infecção e ajudar a controlar eventual sangramento — sem nunca tentar reintroduzir o osso ou pressionar diretamente sobre ele." },
+      { q:"5. Leia as afirmativas sobre atendimento com queimaduras e marque V para verdadeiro e F para falso:\n\n( ) Sempre se deve colocar sobre a queimadura substâncias como pó de café, creme dental etc. Isso facilita a limpeza do ferimento e acelera a cicatrização.\n\n( ) Se a queimadura for química, leve o recipiente junto, de preferência vazio, para avaliação médica.\n\n( ) Queimaduras de 3º grau são profundas, podendo chegar até os ossos, e se caracterizam por pouca dor.\n\n( ) A queimadura pode ser definida como uma lesão produzida no tecido de revestimento do organismo apenas por agentes térmicos (frio ou calor).",
+        a:"(F) Falso — nunca se deve aplicar pó de café, creme dental ou qualquer substância caseira sobre uma queimadura; isso pode contaminar o ferimento e piorar a lesão.\n\n(V) Verdadeiro — levar o recipiente (mesmo vazio) ajuda a equipe médica a identificar a substância química e definir o tratamento adequado.\n\n(F) Falso — queimaduras de 3º grau atingem toda a espessura da pele e realmente causam pouca ou nenhuma dor (nervos destruídos), mas o comprometimento de músculos e ossos, com carbonização, é o que caracteriza a queimadura de 4º grau.\n\n(F) Falso — a queimadura pode ser causada por agentes térmicos, químicos, elétricos ou radioativos, não apenas térmicos." }
+    ]}
+  ];
+
   var STORAGE_KEY = "cbae_flashcards_v1";
   var QUIZ_STORAGE_KEY = "cbae_simulado_v1";
 
@@ -800,6 +885,10 @@
   }
   function getSimulado(id){
     for(var i=0;i<SIMULADOS.length;i++){ if(SIMULADOS[i].id===id) return SIMULADOS[i]; }
+    return null;
+  }
+  function getManualLesson(id){
+    for(var i=0;i<QUESTOES_MANUAL.length;i++){ if(QUESTOES_MANUAL[i].id===id) return QUESTOES_MANUAL[i]; }
     return null;
   }
 
@@ -859,6 +948,8 @@
   var reviewList = document.getElementById("reviewList");
   var quizAgainBtn = document.getElementById("quizAgainBtn");
   var quizBackHomeBtn = document.getElementById("quizBackHomeBtn");
+  var manualView = document.getElementById("manualView");
+  var manualContent = document.getElementById("manualContent");
 
   // ---------------- RENDER HOME ----------------
   function renderHome(){
@@ -899,6 +990,31 @@
       generalBadge.textContent = bestGeral ? (bestGeral.score + "/" + bestGeral.total) : totalQAll + " questões";
 
       totalStats.textContent = "Melhor pontuação acumulada: " + bestAll + " de " + totalQAll + " questões";
+    } else if(state.homeMode === "manual"){
+      heroDesc.innerHTML = 'As perguntas oficiais de "Avaliação da Lição" que fecham cada capítulo do manual — discursivas, de relacionar colunas e de V/F — compiladas aqui com resposta comentada. <em>O manual não traz um gabarito oficial: as respostas foram elaboradas a partir do conteúdo de cada lição e conferidas linha a linha com o texto original.</em> Toque em "ver resposta" para conferir.';
+
+      var totalManualQ = 0;
+      QUESTOES_MANUAL.forEach(function(lesson){
+        totalManualQ += lesson.items.length;
+        var card = document.createElement("button");
+        card.className = "mod-card";
+        card.innerHTML =
+          '<div class="mod-num">' + lesson.num + '</div>' +
+          '<p class="mod-name display">' + escapeHtml(lesson.name) + '</p>' +
+          '<p class="mod-desc">Questões oficiais de "Avaliação da Lição", com resposta</p>' +
+          '<div class="mod-foot">' +
+            '<span>' + lesson.items.length + ' questões</span>' +
+            '<span class="mod-badge">ver</span>' +
+          '</div>';
+        card.addEventListener("click", function(){ openManual(lesson.id); });
+        modGrid.appendChild(card);
+      });
+
+      generalNum.textContent = "COMPLETO";
+      generalName.textContent = "TODAS AS LIÇÕES";
+      generalDesc.textContent = "As " + totalManualQ + " questões oficiais das 4 lições, uma atrás da outra, em uma única lista.";
+      generalBadge.textContent = totalManualQ + " questões";
+      totalStats.textContent = totalManualQ + " questões oficiais compiladas do manual, com resposta comentada";
     } else {
       heroDesc.innerHTML = 'Escolha um módulo e treine por recordação ativa. Marque cada cartão como <strong>lembrei</strong> ou <strong>não lembrei</strong> — os que você errar voltam a aparecer na mesma sessão.';
 
@@ -934,6 +1050,7 @@
     doneView.hidden = true;
     quizView.hidden = true;
     quizDoneView.hidden = true;
+    manualView.hidden = true;
     barBack.hidden = true;
     barCount.hidden = true;
     barTitle.innerHTML = "CARTÕES DE ESTUDO<small>Manual CBAE — CBMSC</small>";
@@ -953,7 +1070,9 @@
   }
 
   generalCard.addEventListener("click", function(){
-    if(state.homeMode === "quiz"){ startQuiz("geral"); } else { startDeck("geral"); }
+    if(state.homeMode === "quiz"){ startQuiz("geral"); }
+    else if(state.homeMode === "manual"){ openManual("geral"); }
+    else { startDeck("geral"); }
   });
   resetAllBtn.addEventListener("click", function(){
     if(confirm("Isso vai apagar todo o progresso salvo em todos os módulos (cartões e simulados). Continuar?")){
@@ -1259,6 +1378,67 @@
   quizAgainBtn.addEventListener("click", function(){ startQuiz(quiz.deckId); });
   quizBackHomeBtn.addEventListener("click", renderHome);
 
+  // ================= QUESTÕES DO MANUAL =================
+  function renderManualLesson(lesson, container, showHeading){
+    if(showHeading){
+      var head = document.createElement("div");
+      head.className = "manual-lesson-head";
+      head.textContent = lesson.name;
+      container.appendChild(head);
+    }
+    lesson.items.forEach(function(item, i){
+      var box = document.createElement("div");
+      box.className = "manual-item";
+
+      var qEl = document.createElement("p");
+      qEl.className = "manual-q";
+      qEl.textContent = item.q;
+      box.appendChild(qEl);
+
+      var toggleBtn = document.createElement("button");
+      toggleBtn.className = "manual-toggle";
+      toggleBtn.textContent = "Ver resposta";
+      box.appendChild(toggleBtn);
+
+      var aEl = document.createElement("div");
+      aEl.className = "manual-answer";
+      aEl.textContent = item.a;
+      aEl.hidden = true;
+      box.appendChild(aEl);
+
+      toggleBtn.addEventListener("click", function(){
+        aEl.hidden = !aEl.hidden;
+        toggleBtn.textContent = aEl.hidden ? "Ver resposta" : "Ocultar resposta";
+      });
+
+      container.appendChild(box);
+    });
+  }
+
+  function openManual(id){
+    manualContent.innerHTML = "";
+
+    homeView.hidden = true;
+    studyView.hidden = true;
+    quizView.hidden = true;
+    quizDoneView.hidden = true;
+    doneView.hidden = true;
+    manualView.hidden = false;
+    barBack.hidden = false;
+    barCount.hidden = true;
+
+    if(id === "geral"){
+      barTitle.innerHTML = "Todas as lições<small>questões oficiais do manual</small>";
+      QUESTOES_MANUAL.forEach(function(lesson){
+        renderManualLesson(lesson, manualContent, true);
+      });
+    } else {
+      var lesson = getManualLesson(id);
+      barTitle.innerHTML = escapeHtml(lesson.name) + "<small>questões oficiais do manual</small>";
+      renderManualLesson(lesson, manualContent, false);
+    }
+  }
+
   // Keyboard support
   document.addEventListener("keydown", function(e){
     if(!studyView.hidden){
@@ -1285,6 +1465,10 @@
       } else if(e.key === "Escape"){
         renderHome();
       }
+      return;
+    }
+    if(!manualView.hidden && e.key === "Escape"){
+      renderHome();
     }
   });
 
