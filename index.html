@@ -365,6 +365,44 @@
   }
   .manual-answer[hidden]{ display:none; }
 
+  /* ---------- GUIDE CONTENT ---------- */
+  .guide-content{ max-width:760px; }
+  .guide-content h1{
+    font-family:'Big Shoulders Display',sans-serif; font-weight:800;
+    font-size:clamp(1.6rem,5vw,2.1rem); line-height:1.05; color:#fff;
+    background:var(--red); border:3px solid var(--red-dark); padding:18px 20px; margin:0 0 6px;
+  }
+  .guide-content > p:first-of-type em{
+    display:block; color:var(--ink-soft); font-size:0.85rem; margin:0 0 22px;
+  }
+  .guide-content h2{
+    font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:1.35rem;
+    color:var(--red); border-bottom:2px solid var(--red); padding-bottom:5px; margin:30px 0 14px;
+  }
+  .guide-content h3{
+    font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:1.05rem;
+    color:#7a1212; margin:18px 0 8px;
+  }
+  .guide-content p{ line-height:1.55; margin:0 0 12px; font-size:0.93rem; }
+  .guide-content ul, .guide-content ol{ margin:0 0 14px; padding-left:22px; }
+  .guide-content li{ line-height:1.5; margin-bottom:5px; font-size:0.93rem; }
+  .guide-content strong{ color:#7a1212; }
+  .guide-content hr{ border:none; border-top:1px solid var(--line); margin:22px 0; }
+  .guide-content table{
+    border-collapse:collapse; width:100%; margin:10px 0 18px; font-size:0.86rem;
+  }
+  .guide-content th{ background:var(--red); color:#fff; text-align:left; padding:7px 10px; }
+  .guide-content td{ border:1px solid var(--line); padding:7px 10px; vertical-align:top; }
+  .guide-content tr.even td{ background:var(--paper-2); }
+  .guide-answers-head{
+    font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:1.35rem;
+    color:var(--red); border-bottom:2px solid var(--red); padding-bottom:5px; margin:30px 0 14px;
+  }
+  .guide-closing{
+    margin-top:24px; padding:16px 18px; background:var(--paper-2); border-left:3px solid var(--red);
+    font-style:italic; color:var(--ink-soft); font-size:0.9rem;
+  }
+
   [hidden]{ display:none !important; }
 </style>
 </head>
@@ -395,6 +433,7 @@
       <button class="mode-btn active" data-mode="cards">CARTÕES</button>
       <button class="mode-btn" data-mode="quiz">SIMULADO</button>
       <button class="mode-btn" data-mode="manual">QUESTÕES DO MANUAL</button>
+      <button class="mode-btn" data-mode="guide">GUIA DE ESTUDO</button>
     </div>
 
     <p class="section-label">MÓDULOS</p>
@@ -492,6 +531,11 @@
   <!-- MANUAL QUESTIONS VIEW -->
   <section id="manualView" hidden>
     <div id="manualContent"></div>
+  </section>
+
+  <!-- STUDY GUIDE VIEW -->
+  <section id="guideView" hidden>
+    <div class="guide-content" id="guideBody"></div>
   </section>
 
 </main>
@@ -831,6 +875,464 @@
     ]}
   ];
 
+  // Conteúdo do Guia de Estudo (convertido do guia_estudo_CBAE.md) — string estática confiável, inserida via innerHTML.
+  var GUIDE_HTML_TOP = `<h1 id="guia-de-estudo-intensivo-manual-cbae-cbmsc-2ª-ed.-2024">Guia de
+Estudo Intensivo — Manual CBAE (CBMSC, 2ª ed. 2024)</h1>
+<p><em>Guia condensado para revisão em 1 dia. Baseado no “Manual de
+Capacitação em Atendimento Básico a Emergências” do Corpo de Bombeiros
+Militar de Santa Catarina. Use-o como mapa — para os detalhes finos,
+volte ao PDF original.</em></p>
+<hr />
+<h2 id="números-que-você-tem-que-saber-de-cor">📞 Números que você TEM
+que saber de cor</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Nº</th>
+<th>Serviço</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>190</strong></td>
+<td>Polícia Militar (PMSC)</td>
+</tr>
+<tr class="even">
+<td><strong>191</strong></td>
+<td>Polícia Rodoviária Federal</td>
+</tr>
+<tr class="odd">
+<td><strong>192</strong></td>
+<td>SAMU</td>
+</tr>
+<tr class="even">
+<td><strong>193</strong></td>
+<td>Corpo de Bombeiros Militar (CBMSC)</td>
+</tr>
+<tr class="odd">
+<td><strong>198</strong></td>
+<td>Polícia Rodoviária Estadual</td>
+</tr>
+<tr class="even">
+<td><strong>199</strong></td>
+<td>Defesa Civil</td>
+</tr>
+<tr class="odd">
+<td><strong>0800 643 5252</strong></td>
+<td>Centro de Informações Toxicológicas (24h)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="lição-de-apresentação">LIÇÃO DE APRESENTAÇÃO</h2>
+<ul>
+<li>Seção de Bombeiros criada pela Lei Estadual nº 1.288 (16/09/1919),
+sob o governador Hercílio Luz.</li>
+<li>Inaugurada em 26/09/1926; primeiro chamado atendido em
+02/10/1926.</li>
+<li>O curso forma <strong>Agentes Comunitários de Proteção
+Civil</strong> e <strong>Brigadistas Orgânicos</strong>.</li>
+</ul>
+<hr />
+<h2 id="lição-i-percepção-gestão-e-redução-de-riscos">LIÇÃO I —
+Percepção, gestão e redução de riscos</h2>
+<p><strong>Conceitos-chave (Glossário):</strong> -
+<strong>Ameaça</strong>: probabilidade estatística + magnitude de um
+evento adverso. - <strong>Vulnerabilidade</strong>: condição do
+corpo/sistema receptor que define os efeitos adversos. -
+<strong>Perigo</strong>: circunstância capaz de causar dano. -
+<strong>Risco</strong>: relação entre ameaça e vulnerabilidade. -
+<strong>Desastre</strong>: resultado de eventos adversos (naturais ou
+tecnológicos) sobre um sistema vulnerável. - Fórmula didática: <strong>R
+= V × A / CR</strong> (Risco = Vulnerabilidade × Ameaça ÷ Capacidade de
+Resposta). - <strong>Situação de Emergência</strong>: capacidade de
+resposta comprometida <strong>parcialmente</strong>. - <strong>Estado de
+Calamidade Pública</strong>: capacidade de resposta comprometida
+<strong>substancialmente</strong>.</p>
+<p><strong>Ciclo das Ações de Defesa Civil (decore a ordem!):</strong>
+1. Prevenção → 2. Mitigação → 3. Preparação → 4. Resposta → 5.
+Recuperação</p>
+<p><strong>Desastres mais comuns em SC:</strong> -
+<strong>Vendavais/tempestades</strong>: ventos de <strong>88–102
+km/h</strong>. Antes: revisar telhado, desligar aparelhos elétricos/gás.
+Depois: não tocar em fiação caída, avisar Defesa Civil/Bombeiros. -
+<strong>Tempestades de raios</strong>: ~100 mortes/ano no Brasil. Não
+usar telefone ligado à rede elétrica; evitar árvores, estruturas altas,
+áreas abertas. - <strong>Desastres hidrológicos</strong> (COBRADE) —
+<strong>decore a diferença</strong>: - <strong>Inundação</strong>:
+transbordamento <strong>gradual</strong> de curso d’água. -
+<strong>Enxurrada</strong>: escoamento <strong>rápido e
+violento</strong>, associado a relevo acidentado/cachoeiras. -
+<strong>Alagamento</strong>: água acumulada por falha na drenagem
+urbana. - Tratamento de água para consumo: ferver → depois <strong>2
+gotas de água sanitária OU 1 gota de hipoclorito de sódio por
+litro</strong>, repousar 15–30 min. - Limpeza de objetos: 2 colheres de
+sopa de hipoclorito/água sanitária por 1L de água, repousar 15 min. -
+<strong>Movimento de massa (deslizamento)</strong>: sinais de alerta —
+fendas, rachaduras, inclinação de árvores/postes, surgimento de minas
+d’água. - <strong>Incêndio florestal</strong>: nunca combater sozinho;
+avisar Bombeiros/Defesa Civil/PM. - <strong>Granizo</strong>: não se
+abrigar sob árvores ou coberturas frágeis.</p>
+<hr />
+<h2 id="lição-ii-atuação-inicial-em-acidentes">LIÇÃO II — Atuação
+inicial em acidentes</h2>
+<p><strong>Definições (Portaria 354/2014 – Ministério da
+Saúde):</strong> - <strong>Acidente</strong>: evento inesperado,
+consequência específica indesejada. - <strong>Emergência</strong>: risco
+imediato à saúde/vida, exige tratamento médico
+<strong>imediato</strong>. - <strong>Urgência</strong>: agravo
+imprevisto, com ou sem risco potencial à vida, exige assistência
+<strong>imediata</strong> mas não necessariamente risco de morte.</p>
+<p><strong>Ao acionar socorro, informe sempre:</strong> nome de quem
+liga → local exato (pontos de referência) → tipo de emergência → nº de
+vítimas.</p>
+<p><strong>Prevenção de acidentes:</strong> - <strong>Trânsito</strong>:
+mantenha a calma, acione o serviço certo, avalie riscos da cena (energia
+elétrica, combustível), não manipule vítima sem capacitação. -
+<strong>Trabalho</strong>: uso de EPI, pausas a cada 2h, não confiar
+apenas na experiência. - <strong>Doméstico</strong>: cozinha (cabos de
+panela virados para dentro), quedas (idosos/crianças), sufocamento
+(objetos pequenos, brinquedos INMETRO), intoxicação (produtos fora do
+alcance), incêndio (fiação, cigarros, materiais inflamáveis — CBMSC
+recomenda revisão elétrica a cada 15 anos, IN-19). -
+<strong>Afogamento</strong>: maior risco entre adolescentes; 70% das
+mortes em rios/represas; álcool é fator de risco grave. Se avistar
+alguém se afogando: <strong>não entre na água sem necessidade</strong>,
+jogue algo flutuante e ligue 193. Bandeiras de praia: vermelho = alto
+risco, amarelo = médio, verde = baixo risco. - <strong>Fogos de
+artifício</strong>: manuseio só por pirotécnico credenciado; proibida
+venda a menores.</p>
+<hr />
+<h2 id="lição-iii-sistemas-preventivos-e-extinção-de-incêndios">LIÇÃO
+III — Sistemas preventivos e extinção de incêndios</h2>
+<p><strong>Sistemas preventivos de uma edificação:</strong> | Sistema |
+Função | |—|—| | Extintores | Combate a princípios de incêndio (uso
+leigo) | | SHP (Sistema Hidráulico Preventivo) | Mangueiras + hidrantes
++ reserva técnica de incêndio (RTI) | | Chuveiros automáticos
+(sprinklers) | Ativação automática por calor | | Detecção e alarme |
+Sensores + acionador manual + central de alarme | | Saídas de emergência
+| Rota de fuga (nunca elevador) | | Iluminação de emergência | Ilumina a
+rota em caso de corte de energia | | Sinalização de abandono | Placas
+fotoluminescentes verde/branco |</p>
+<ul>
+<li>Extintor: teste hidrostático obrigatório a cada <strong>5
+anos</strong>.</li>
+<li>No abandono do prédio: desça sempre pelo lado
+<strong>direito</strong>, nunca use elevador, não volte para buscar
+pertences.</li>
+<li><strong>Exercícios simulados</strong>: no mínimo 1x por ano; avisar
+o CBMSC com <strong>72h de antecedência</strong>.</li>
+<li><strong>Sequência dos 10 procedimentos da Brigada</strong>: 1.
+Alerta → 2. Análise da situação → 3. Apoio externo → 4. Primeiros
+socorros → 5. Eliminar riscos → 6. Evacuação → 7. Isolamento de área →
+8. Confinamento → 9. Combate ao incêndio → 10. Investigação.</li>
+</ul>
+<p><strong>Tetraedro do fogo (4 elementos da combustão):</strong> Calor
++ Combustível + Comburente + Reação em cadeia. - % de oxigênio no ar:
+<strong>21%</strong> = queima completa · <strong>16–8%</strong> = queima
+lenta (brasas) · <strong>&lt;8%</strong> = sem combustão. - Propagação
+do calor: <strong>Condução</strong> (sólido, molécula a molécula) ·
+<strong>Convecção</strong> (fluidos, movimento ascendente/descendente) ·
+<strong>Irradiação</strong> (ondas, à distância).</p>
+<p><strong>Classes de incêndio — TABELA MAIS COBRADA:</strong> | Classe
+| Material | Método de extinção | |—|—|—| | <strong>A</strong> | Sólidos
+comuns (madeira, papel, tecido) | Resfriamento | | <strong>B</strong> |
+Líquidos inflamáveis, graxas, gases | Abafamento | | <strong>C</strong>
+| Equipamentos energizados | Abafamento (nunca água) | |
+<strong>D</strong> | Metais pirofóricos (magnésio, lítio…) | Retirada do
+material |</p>
+<p><strong>Agentes extintores:</strong> Água → Classe A (resfriamento) ·
+Espuma → Classe B (abafamento) · Pó químico seco → Classe B e C
+(abafamento + quebra de reação em cadeia) · CO₂ → Classe B e C
+(abafamento).</p>
+<p><strong>Uso do extintor:</strong> posição vertical → puxar
+trava/lacre → segurar mangueira e apertar o gatilho → dirigir jato para
+a <strong>base</strong> do fogo. <strong>Uso do SHP:</strong> acionar
+193 → desligar energia → desenrolar mangueira (sem ângulos) → conectar
+no hidrante → abrir registro → mirar na base, posicionado contra o
+vento.</p>
+<p><strong>Riscos em incêndios:</strong> falta de O₂, calor irradiado
+(&gt;60°C já lesiona vias aéreas), gases tóxicos (monóxido de carbono,
+cloreto de hidrogênio, cianeto de hidrogênio) — <strong>a maior causa de
+morte é a fumaça, não as chamas.</strong></p>
+<hr />
+<h2 id="lição-iv-primeiros-socorros-a-maior-e-mais-cobrada">LIÇÃO IV —
+Primeiros socorros (a maior e mais cobrada)</h2>
+<h3 id="anatomia-básica">Anatomia básica</h3>
+<ul>
+<li><strong>Posição anatômica</strong>: em pé, de frente, braços ao lado
+do corpo, palmas para frente.</li>
+<li><strong>Decúbitos</strong>: ventral (de bruços), dorsal (de costas),
+lateral direito/esquerdo.</li>
+<li><strong>Planos</strong>: mediano (D/E), transversal
+(superior/inferior), frontal (anterior/posterior).</li>
+<li>Sistemas do corpo: esquelético, muscular, tegumentar (pele),
+nervoso, circulatório, endócrino, linfático, respiratório, digestório,
+urinário, reprodutor — saiba a função principal de cada um.</li>
+</ul>
+<h3 id="avaliação">Avaliação</h3>
+<ul>
+<li><strong>Avaliação da cena</strong> (segurança primeiro) →
+<strong>Avaliação geral da vítima</strong> (sinais vitais).</li>
+<li>Prioridades ao abordar: manter a calma → avaliar a cena → garantir a
+própria segurança → pedir ajuda (193) → abordar a vítima.</li>
+<li><strong>Sinal</strong> = o que você observa (pulso, palidez).
+<strong>Sintoma</strong> = o que a vítima relata (dor, tontura).</li>
+</ul>
+<h3 id="sinais-vitais-decore-essa-tabela">Sinais vitais — DECORE ESSA
+TABELA</h3>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Respiração (mrm)</th>
+<th>Pulso (bpm)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Adulto</td>
+<td>12–20</td>
+<td>60–100</td>
+</tr>
+<tr class="even">
+<td>Criança</td>
+<td>20–40</td>
+<td>80–140</td>
+</tr>
+<tr class="odd">
+<td>Lactente</td>
+<td>40–60</td>
+<td>85–190</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Temperatura normal</strong>: 36,5–37,0°C. Sub-normal: 34–36
+· Febre: 38–39 · Febre alta: 39–40 · Hiperpirexia: 40–41.</li>
+<li><strong>Idades</strong>: Lactente = até 1 ano · Criança = 1 a 8 anos
+(para fins de 1º socorros). <em>(ECA: criança até 12 incompletos,
+adolescente 12–18)</em>.</li>
+<li><strong>Pupilas</strong>: mióticas (contraídas) = SNC/drogas ·
+midriáticas (dilatadas) = choque, hemorragia, TCE, pouca luz ·
+anisocóricas (desiguais) = TCE/AVC.</li>
+<li><strong>Pele</strong>: pálida = choque/IAM · cianótica =
+insuficiência cardíaca/obstrução de vias aéreas · rosada = intoxicação
+por CO · vermelha = insolação.</li>
+</ul>
+<h3 id="vias-aéreas">Vias aéreas</h3>
+<ul>
+<li><strong>Manobra de extensão de cabeça</strong> → uso
+<strong>clínico</strong> (sem trauma).</li>
+<li><strong>Manobra de empurre mandibular</strong> → uso em
+<strong>trauma/suspeita de lesão cervical</strong> (não movimenta o
+pescoço).</li>
+</ul>
+<h3 id="ovace-engasgo">OVACE (engasgo)</h3>
+<ul>
+<li>Vítima consegue tossir/falar → só estimule a tossir, não
+intervenha.</li>
+<li>Obstrução grave (adulto/criança &gt;1 ano): golpes nas costas (até
+5x) intercalados com <strong>manobra de Heimlich</strong> (compressão
+subdiafragmática, entre umbigo e apêndice xifoide).</li>
+<li><strong>Lactente</strong>: NUNCA Heimlich. Fazer 5 golpes nas costas
+(decúbito ventral sobre o antebraço) + 5 compressões torácicas com 2
+dedos (linha intermamilar), intercalando.</li>
+<li>Perda de consciência em qualquer idade → deitar, acionar 193,
+iniciar RCP.</li>
+</ul>
+<h3 id="rcp-ressuscitação-cardiopulmonar">RCP (Ressuscitação
+Cardiopulmonar)</h3>
+<ul>
+<li>Frequência: <strong>100–120 compressões/minuto</strong>.</li>
+<li>Profundidade: <strong>adulto ≥ 5 cm</strong> (2 polegadas), com
+retorno total do tórax entre compressões.</li>
+<li>Ponto de compressão: linha intermamilar.</li>
+<li><strong>Criança</strong>: 1 mão, ~5 cm. <strong>Lactente</strong>: 2
+dedos, ~4 cm (1/3 do diâmetro AP do tórax).</li>
+<li>Sinais de parada cardíaca: não responsivo + sem respiração + sem
+pulso → ligar 193/192 e iniciar RCP imediatamente.</li>
+</ul>
+<h3 id="hemorragias">Hemorragias</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Tipo</th>
+<th>Aspecto</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Arterial</td>
+<td>Jorra pulsátil, vermelho <strong>vivo</strong></td>
+</tr>
+<tr class="even">
+<td>Venosa</td>
+<td>Sai lento e contínuo, vermelho <strong>escuro</strong></td>
+</tr>
+<tr class="odd">
+<td>Capilar</td>
+<td>Sai lentamente, pouco volume</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Controle: <strong>pressão direta</strong> (1ª escolha) → se
+insuficiente, <strong>curativo compressivo</strong> (não remova a 1ª
+gaze, só adicione por cima). Torniquete não é ensinado neste curso
+(técnica avançada).</li>
+</ul>
+<h3 id="estado-de-choque">Estado de choque</h3>
+<ul>
+<li><strong>Choque hipovolêmico/hemorrágico</strong>: PA sistólica &lt;
+90 mmHg, pulso fraco e rápido, pele fria/pálida/úmida. Tratamento:
+decúbito dorsal, elevar pernas, controlar hemorragia, manter aquecida,
+<strong>nunca dar de comer/beber</strong>.</li>
+<li><strong>Choque anafilático</strong>: reação alérgica severa (picada,
+medicamento, alimento). Sintomas: prurido, edema generalizado,
+dificuldade respiratória, pulso fraco. Pode matar em segundos/minutos —
+priorize acionar o SEM.</li>
+</ul>
+<h3 id="fraturas">Fraturas</h3>
+<ul>
+<li><strong>Fechada</strong> (pele íntegra) x
+<strong>Aberta/exposta</strong> (osso visível).</li>
+<li>Mnemônico <strong>DEDI</strong>: Dor, Edema, Deformidade, Impotência
+funcional.</li>
+<li>Regra de ouro: <strong>nunca reposicionar</strong> o osso;
+imobilizar a articulação <strong>acima e abaixo</strong> do local; usar
+tala rígida + amarração.</li>
+<li>Fraturas de coluna/crânio → emergência crítica, não mover a
+vítima.</li>
+</ul>
+<h3 id="queimaduras">Queimaduras</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Grau</th>
+<th>Características</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1º</td>
+<td>Só epiderme — dor, vermelhidão</td>
+</tr>
+<tr class="even">
+<td>2º</td>
+<td>Epiderme + derme — dor forte, <strong>bolhas</strong></td>
+</tr>
+<tr class="odd">
+<td>3º</td>
+<td>Espessura total — <strong>sem dor</strong> (nervos destruídos),
+aspecto de couro</td>
+</tr>
+<tr class="even">
+<td>4º</td>
+<td>Atinge músculo/osso — <strong>carbonização</strong></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Tratamento: resfriar em água corrente (~15°C) por 3–5 min → cobrir
+com curativo estéril úmido e frouxo → <strong>nunca</strong> usar
+cremes, pomadas, pasta de dente, manteiga.</li>
+<li>Fogo na roupa: técnica <strong>PARE, DEITE e ROLE</strong>.</li>
+<li>Queimadura química: lavar com água corrente por <strong>no mínimo 15
+min</strong>, remover roupa contaminada.</li>
+<li>Queimadura com SCTQ &gt; 10%: usar curativo <strong>seco</strong>
+(evitar hipotermia).</li>
+</ul>
+<h3 id="intoxicações">Intoxicações</h3>
+<ul>
+<li>Vias: ingestão, inalação, absorção (pele), injeção.</li>
+<li>Nunca provocar vômito (exceto orientação médica); se vomitar,
+posicionar de lado.</li>
+<li>Centro de Informações Toxicológicas: <strong>0800 643
+5252</strong>.</li>
+</ul>
+<h3 id="animais-peçonhentos-sc">Animais peçonhentos (SC)</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Animal</th>
+<th>Sinal característico</th>
+<th>Conduta específica</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Aranha armadeira</td>
+<td>Dor intensa, priapismo</td>
+<td>Posição confortável, aquecer, monitorar</td>
+</tr>
+<tr class="even">
+<td>Aranha marrom</td>
+<td>Dor tipo queimação, evolui em horas</td>
+<td>Soro antiloxoscélico eficaz até 36h após picada</td>
+</tr>
+<tr class="odd">
+<td>Bothrops (jararaca)</td>
+<td>Edema, sangramento</td>
+<td>Soro antibotrópico</td>
+</tr>
+<tr class="even">
+<td>Crotalus (cascavel)</td>
+<td><strong>Sem dor</strong>, neurotóxico, visão turva</td>
+<td>Risco de PCR — urgência máxima</td>
+</tr>
+<tr class="odd">
+<td>Micrurus (coral verdadeira)</td>
+<td>Pálpebra caída, paralisia</td>
+<td>Soro antielapídico</td>
+</tr>
+<tr class="even">
+<td>Lagarta Lonomia</td>
+<td>Quadro hemorrágico grave</td>
+<td>Levar a lagarta junto (copo/saco)</td>
+</tr>
+<tr class="odd">
+<td>Escorpião</td>
+<td>Dor local, hipersensibilidade</td>
+<td>Nunca cortar/chupar o local</td>
+</tr>
+<tr class="even">
+<td>Abelha</td>
+<td>Risco de choque anafilático</td>
+<td>Retirar ferrão <strong>raspando</strong> (nunca apertar/pinça)</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="transporte-de-vítima-sem-suspeita-de-trauma-de-coluna">Transporte de
+vítima (sem suspeita de trauma de coluna)</h3>
+<ul>
+<li>Só mover se houver <strong>risco iminente</strong> (fogo,
+desabamento, gases tóxicos, trânsito).</li>
+<li>Técnicas: arrastamento por cobertor (1 pessoa), transporte tipo
+bombeiro (1 pessoa, sem suporte de cabeça), transporte pelas
+extremidades (2 pessoas), cadeirinha (2 pessoas), levantamento com 3
+pessoas.</li>
+</ul>
+<h3 id="biossegurança">Biossegurança</h3>
+<ul>
+<li>Precauções universais: EPI (luva, máscara, óculos), higienização,
+vacinação (hepatite B, tétano).</li>
+<li>Kit básico de 1º socorros: luva de látex, máscara, soro fisiológico,
+gaze, ataduras, esparadrapo, tesoura de ponta romba, termômetro, óculos
+de proteção.</li>
+</ul>
+`;
+
   var STORAGE_KEY = "cbae_flashcards_v1";
   var QUIZ_STORAGE_KEY = "cbae_simulado_v1";
 
@@ -950,6 +1452,8 @@
   var quizBackHomeBtn = document.getElementById("quizBackHomeBtn");
   var manualView = document.getElementById("manualView");
   var manualContent = document.getElementById("manualContent");
+  var guideView = document.getElementById("guideView");
+  var guideBody = document.getElementById("guideBody");
 
   // ---------------- RENDER HOME ----------------
   function renderHome(){
@@ -1051,6 +1555,7 @@
     quizView.hidden = true;
     quizDoneView.hidden = true;
     manualView.hidden = true;
+    guideView.hidden = true;
     barBack.hidden = true;
     barCount.hidden = true;
     barTitle.innerHTML = "CARTÕES DE ESTUDO<small>Manual CBAE — CBMSC</small>";
@@ -1058,7 +1563,9 @@
 
   Array.prototype.forEach.call(modeToggle.querySelectorAll(".mode-btn"), function(btn){
     btn.addEventListener("click", function(){
-      state.homeMode = btn.getAttribute("data-mode");
+      var mode = btn.getAttribute("data-mode");
+      if(mode === "guide"){ openGuide(); return; }
+      state.homeMode = mode;
       renderHome();
     });
   });
@@ -1439,6 +1946,42 @@
     }
   }
 
+  // ================= GUIA DE ESTUDO =================
+  function openGuide(){
+    homeView.hidden = true;
+    studyView.hidden = true;
+    quizView.hidden = true;
+    quizDoneView.hidden = true;
+    doneView.hidden = true;
+    manualView.hidden = true;
+    guideView.hidden = false;
+    barBack.hidden = false;
+    barCount.hidden = true;
+    barTitle.innerHTML = "Guia de Estudo<small>resumo completo + respostas dos exercícios</small>";
+
+    guideBody.innerHTML = GUIDE_HTML_TOP;
+
+    var answersHead = document.createElement("h2");
+    answersHead.className = "guide-answers-head";
+    answersHead.textContent = "✅ Perguntas de autoavaliação — respondidas com base no manual";
+    guideBody.appendChild(answersHead);
+
+    var note = document.createElement("p");
+    note.innerHTML = '<em>O manual não traz um gabarito oficial para essas perguntas — as respostas abaixo foram elaboradas a partir do conteúdo de cada lição e conferidas contra o texto original do PDF.</em>';
+    guideBody.appendChild(note);
+
+    QUESTOES_MANUAL.forEach(function(lesson){
+      renderManualLesson(lesson, guideBody, true);
+    });
+
+    var closing = document.createElement("div");
+    closing.className = "guide-closing";
+    closing.textContent = "Bons estudos — e lembre-se: em qualquer emergência real, sua prioridade #1 é sempre a sua própria segurança antes de agir.";
+    guideBody.appendChild(closing);
+
+    window.scrollTo(0,0);
+  }
+
   // Keyboard support
   document.addEventListener("keydown", function(e){
     if(!studyView.hidden){
@@ -1468,6 +2011,10 @@
       return;
     }
     if(!manualView.hidden && e.key === "Escape"){
+      renderHome();
+      return;
+    }
+    if(!guideView.hidden && e.key === "Escape"){
       renderHome();
     }
   });
